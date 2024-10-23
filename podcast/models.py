@@ -21,4 +21,5 @@ class Podcast(models.Model):
     owner_name = models.CharField(max_length=200)
     owner_email = models.CharField(max_length=200)
     created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
