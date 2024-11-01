@@ -17,6 +17,7 @@ class Podcast(models.Model):
     )
     author = models.CharField(max_length=200)
     description = models.TextField()
+    artwork = models.CharField(max_length=200, default='path/to/image/file')
     # primary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     # secondary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     copyright = models.CharField(max_length=200)
@@ -29,3 +30,47 @@ class Podcast(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS, default=0)
+
+    class Meta:
+        ordering = ["-created_on"]
+
+    def __str__(self):
+        return f"{self.title} | added by {self.author}"
+
+
+class Episode(models.Model):
+
+    EPISODE_TYPES = (
+        ("Normal", "Normal"), 
+        ("Trailer", "Trailer"),
+        ("Bonus", "Bonus")
+    )
+
+    title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    podcast = models.ForeignKey(
+        Podcast, on_delete=models.CASCADE, related_name="podcast_episodes"
+    )
+    creator = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_episodes"
+    )
+    author = models.CharField(max_length=200, blank=True)
+    keywords = models.CharField(max_length=200, blank=True)
+    type = models.CharField(choices=EPISODE_TYPES, default="Normal")
+    season_number = models.IntegerField(default=1)
+    episode_number = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True)
+    artwork = models.CharField(max_length=200, blank=True)
+    alt_episode_url = models.CharField(max_length=200, blank=True)
+    video_url = models.CharField(max_length=200, blank=True)
+    explicit_content_warning = models.BooleanField(default=False)
+    publish_date = models.DateTimeField(blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.IntegerField(choices=STATUS, default=0)
+
+    class Meta:
+        ordering = ["-created_on"]
+
+    def __str__(self):
+        return f"{self.title} | added by {self.creator}"
