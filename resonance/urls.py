@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from podcast import views as podcast_views
+# from podcast import views as podcast_views
 
 urlpatterns = [
-    path('podcast/', podcast_views.my_podcast, name='podcast'),
+    # path('podcast/', podcast_views.my_podcast, name='podcast'),
+    path('', include("podcast.urls"), name='podcast-urls'),
     path('admin/', admin.site.urls),
 ]
