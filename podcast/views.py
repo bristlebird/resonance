@@ -7,5 +7,5 @@ from .models import Podcast
 # def my_podcast(request):
 #     return HttpResponse("Hello, Podcaster!")
 class PodcastList(generic.ListView):
-    queryset = Podcast.objects.all()
+    queryset = Podcast.objects.filter(status=1).order_by("-created_on")
     template_name = "podcast_list.html"
