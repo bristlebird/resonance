@@ -8,4 +8,5 @@ from .models import Podcast
 #     return HttpResponse("Hello, Podcaster!")
 class PodcastList(generic.ListView):
     queryset = Podcast.objects.filter(status=1).order_by("-created_on")
-    template_name = "podcast_list.html"
+    template_name = "podcast/index.html"
+    paginate_by = 6
