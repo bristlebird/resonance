@@ -54,6 +54,7 @@ class Episode(models.Model):
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_episodes"
     )
+    # audiofile = models.FileField()
     author = models.CharField(max_length=200, blank=True)
     keywords = models.CharField(max_length=200, blank=True)
     type = models.CharField(choices=EPISODE_TYPES, default="Normal")
