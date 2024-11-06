@@ -9,21 +9,22 @@
         <!-- Blog Entries Column -->
         <div class="col-12 mt-3 left">
             <div class="row">
-                {% for post in podcast_list %}
+                {% for show in podcast_list %}
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="image-container">
                                 <div class="image-flash">
-                                    <p class="author">Author: {{ post.author }}</p>
+                                    <p class="author">Author: {{ show.author }}</p>
                                 </div>
                             </div>
-                            <a href="#" class="post-link">
-                                <h2 class="card-title">{{ post.title }}</h2>
+                            <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
+                                <h2 class="card-title">{{ show.title }}</h2>
+                                <p class="card-text">{{ show.description | safe }}</p>
                             </a>
 
                             <hr />
-                            <p class="card-text text-muted h6">{{ post.created_on}}
+                            <p class="card-text text-muted h6">{{ show.created_on}}
                             </p>
                         </div>
                     </div>
