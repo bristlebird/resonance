@@ -29,6 +29,47 @@
             </div>
         </div>
     </div>
+      <!-- Displaying count of comments -->
+  <div class="row">
+    <div class="col-12">
+      <strong class="text-secondary">
+        <i class="far fa-comments"></i> {{ episode_count }}
+      </strong>
+    </div>
+    <div class="col-12">
+      <hr>
+    </div>
+  </div>
+  <!-- Displaying Comments -->
+  <div class="row">
+    <div class="col-md-8 card mb-4 mt-3">
+      <h3>Episodes</h3>
+      <div class="card-body">
+        {% for episode in episodes %}
+        <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}
+          faded{% elif not episode.status %} d-none{% endif %}">
+          <p class="font-weight-bold">
+            {{ episode.administrator }}
+            <span class="font-weight-normal">
+              {{ episode.created_on }}
+            </span>
+          </p>
+          <div id="episode{{ episode.id }}">
+            <h3>{{ episode.title }}</h3>
+            {{ episode.description | safe }}
+          </div>
+          {% if not episode.status and episode.administrator == user %}
+          <p class="approval">
+            This epsiode is in draft
+          </p>
+          {% endif %}
+        </div>
+        <!-- Our for loop ends here -->
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% endblock content %}

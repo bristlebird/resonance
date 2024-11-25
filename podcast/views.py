@@ -41,9 +41,15 @@ def podcast_detail(request, slug):
 
     queryset = Podcast.objects.filter(status=1)
     show = get_object_or_404(queryset, slug=slug)
+    episodes = show.podcast_episodes.all().order_by("-created_on")
+    episode_count = show.podcast_episodes.filter(status=1).count()
 
     return render(
         request,
         "podcast/podcast_detail.html",
-        {"show": show},
+        {
+            "show": show,
+            "episodes": episodes,
+            "episode_count": episode_count,
+        },
     )
