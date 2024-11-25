@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.contrib import messages
 from .models import Podcast
+from .forms import EpisodeForm
 
 
 class PodcastList(generic.ListView):
@@ -44,6 +46,20 @@ def podcast_detail(request, slug):
     episodes = show.podcast_episodes.all().order_by("-created_on")
     episode_count = show.podcast_episodes.filter(status=1).count()
 
+    if request.method == "POST":
+        episode_form = EpisodeForm(data=request.POST)
+        if episode_form.is_valid():
+            episode = episode_form.save(commit=False)
+            episode.administrator = request.user
+            episode.podcast = show
+            episode.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Episode added!'
+            )
+
+    episode_form = EpisodeForm()
+
     return render(
         request,
         "podcast/podcast_detail.html",
@@ -51,5 +67,6 @@ def podcast_detail(request, slug):
             "show": show,
             "episodes": episodes,
             "episode_count": episode_count,
+            "episode_form": episode_form,
         },
     )
