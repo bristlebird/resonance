@@ -1,12 +1,25 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Podcast
-# from django.http import HttpResponse
 
-# Create your views here.
-# def my_podcast(request):
-#     return HttpResponse("Hello, Podcaster!")
+
 class PodcastList(generic.ListView):
+    """
+    Returns all published podcasts in :model:`podcast.Podcast`
+    and displays them in a page of six podcasts. 
+
+    **Context**
+
+    ``queryset``
+        All published instances of :model:`podcast.Podcast`
+    ``paginate_by``
+        Number of podcasts per page.
+        
+    **Template:**
+
+    :template:`podcast/index.html`
+    """
+
     queryset = Podcast.objects.filter(status=1).order_by("-created_on")
     template_name = "podcast/index.html"
     paginate_by = 6
@@ -18,8 +31,8 @@ def podcast_detail(request, slug):
 
     **Context**
 
-    ``post``
-        An instance of :model:`podcast.Podcas`.
+    ``show``
+        An instance of :model:`podcast.Podcast`.
 
     **Template:**
 
