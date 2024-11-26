@@ -144,10 +144,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-MESSAGE_TAGS = {
-    messages.SUCCESS: 'alert-success',
-    messages.ERROR: 'alert-error',
-}
+# MESSAGE_TAGS = {
+#     messages.SUCCESS: 'alert-success',
+#     messages.ERROR: 'alert-error',
+# }
 
 
 # Static files (CSS, JavaScript, Images)
