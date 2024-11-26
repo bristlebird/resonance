@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.contrib import messages
-from .models import Podcast
+from django.http import HttpResponseRedirect
+from .models import Podcast, Episode
 from .forms import EpisodeForm
 
 
@@ -72,6 +73,29 @@ def podcast_detail(request, slug):
             "episode_form": episode_form,
         },
     )
+
+def episode_edit(request, slug, episode_id):
+    """
+    view to edit episodes
+    """
+    if request.method == "POST":
+
+        queryset = Podcast.objects.filter(status=1)
+        podcast = get_object_or_404(queryset, slug=slug)
+        episode = get_object_or_404(Episode, pk=episode_id)
+        episode_form = EpisodeForm(data=request.POST, instance=episode)
+
+        if episode_form.is_valid() and episode.administrator == request.user:
+            episode = episode_form.save(commit=False)
+            episode.podcast = podcast
+            # episode.approved = False
+            episode.save()
+            messages.add_message(request, messages.SUCCESS, 'Episode Updated!')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating episode!')
+
+    return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
+
 
 # dashboard access is available to logged in users only
 @login_required(login_url='/accounts/login/')

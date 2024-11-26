@@ -30,59 +30,62 @@
             </div>
         </div>
     </div>
-      <!-- Displaying count of episodes -->
-  <div class="row">
-    <div class="col-12">
-      <strong class="text-secondary">
-        <i class="far fa-comments"></i> {{ episode_count }}
-      </strong>
-    </div>
-    <div class="col-12">
-      <hr>
-    </div>
-  </div>
-  <!-- Displaying episodes -->
-  <div class="row">
-    <div class="col-md-8 card mb-4 mt-3">
-      <h3>Episodes</h3>
-      <div class="card-body">
-        {% for episode in episodes %}
-        <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}
-          faded{% elif not episode.status %} d-none{% endif %}">
-          <p class="font-weight-bold">
-            {{ episode.administrator }}
-            <span class="font-weight-normal">
-              {{ episode.created_on }}
-            </span>
-          </p>
-          <div id="episode{{ episode.id }}">
-            <h3>{{ episode.title }}</h3>
-            {{ episode.description | safe }}
-          </div>
-          {% if not episode.status and episode.administrator == user %}
-          <p class="approval">
-            This epsiode is in draft
-          </p>
-          {% endif %}
+    <!-- Displaying count of episodes -->
+    <div class="row">
+        <div class="col-12">
+            <strong class="text-secondary">
+                <i class="far fa-comments"></i> {{ episode_count }}
+            </strong>
         </div>
-        {% endfor %}
-      </div>
-    </div>
-    <!-- Creating New Episodes -->
-    <div class="col-md-4 card mb-4 mt-3">
-        <div class="card-body">
-          {% if user.is_authenticated and user == show.administrator %}
-          <h3>Add a new episode:</h3>
-          <p>Posting as: {{ user.username }}</p>
-          <form id="episodeForm" method="post" style="margin-top: 1.3em;">
-            {{ episode_form | crispy }}
-            {% csrf_token %}
-            <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
-          </form>
-          {% endif %}
+        <div class="col-12">
+            <hr>
         </div>
-      </div>
-  </div>
+    </div>
+    <!-- Displaying episodes -->
+    <div class="row">
+        <div class="col-md-8 card mb-4 mt-3">
+            <h3>Episodes</h3>
+            <div class="card-body">
+                {% for episode in episodes %}
+                <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                    <p class="font-weight-bold">
+                        {{ episode.administrator }}
+                        <span class="font-weight-normal">{{ episode.created_on }}</span>
+                    </p>
+                    <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
+                    <div id="episodeDesc{{ episode.id }}">                        
+                        {{ episode.description | safe }}
+                    </div>
+                    {% if not episode.status and episode.administrator == user %}
+                    <p class="approval">This episode is in draft</p>
+                    {% endif %}
+                    {% if user.is_authenticated and episode.administrator == user %}
+                    <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
+                    <button class="btn btn-edit" data-episode_id="{{ episode.id }}">Edit</button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Creating New Episodes -->
+        <div class="col-md-4 card mb-4 mt-3">
+            <div class="card-body">
+                {% if user.is_authenticated and user == show.administrator %}
+                <h3>Add a new episode:</h3>
+                <p>Posting as: {{ user.username }}</p>
+                <form id="episodeForm" method="post" style="margin-top: 1.3em;">
+                    {{ episode_form | crispy }}
+                    {% csrf_token %}
+                    <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}
+
+{% block extras %}
+<script src="{% static 'js/podcast-episodes.js' %}"></script>
+{% endblock %}
