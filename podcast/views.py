@@ -74,6 +74,7 @@ def podcast_detail(request, slug):
         },
     )
 
+
 def episode_edit(request, slug, episode_id):
     """
     view to edit episodes
@@ -93,6 +94,23 @@ def episode_edit(request, slug, episode_id):
             messages.add_message(request, messages.SUCCESS, 'Episode Updated!')
         else:
             messages.add_message(request, messages.ERROR, 'Error updating episode!')
+
+    return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
+
+
+def episode_delete(request, slug, episode_id):
+    """
+    view to delete episode
+    """
+    queryset = Podcast.objects.filter(status=1)
+    podcast = get_object_or_404(queryset, slug=slug)
+    episode = get_object_or_404(Episode, pk=episode_id)
+
+    if episode.administrator == request.user:
+        episode.delete()
+        messages.add_message(request, messages.SUCCESS, 'Episode deleted!')
+    else:
+        messages.add_message(request, messages.ERROR, 'You can only delete your own episodes!')
 
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
 

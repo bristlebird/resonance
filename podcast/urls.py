@@ -7,4 +7,6 @@ urlpatterns = [
     path('<slug:slug>/', views.podcast_detail, name='podcast_detail'),
     path('<slug:slug>/edit_episode/<int:episode_id>',
         views.episode_edit, name='episode_edit'),
+    path('<slug:slug>/delete_episode/<int:episode_id>',
+        views.episode_delete, name='episode_delete'),
 ]

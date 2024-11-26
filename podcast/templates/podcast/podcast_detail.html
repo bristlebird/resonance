@@ -47,13 +47,14 @@
             <h3>Episodes</h3>
             <div class="card-body">
                 {% for episode in episodes %}
-                <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                <div
+                    class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
                     <p class="font-weight-bold">
                         {{ episode.administrator }}
                         <span class="font-weight-normal">{{ episode.created_on }}</span>
                     </p>
                     <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
-                    <div id="episodeDesc{{ episode.id }}">                        
+                    <div id="episodeDesc{{ episode.id }}">
                         {{ episode.description | safe }}
                     </div>
                     {% if not episode.status and episode.administrator == user %}
@@ -83,6 +84,26 @@
         </div>
     </div>
 </div>
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete episode?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this episode?
+                    <br>This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock content %}
 
