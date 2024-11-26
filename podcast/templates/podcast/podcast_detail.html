@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-      <!-- Displaying count of comments -->
+      <!-- Displaying count of episodes -->
   <div class="row">
     <div class="col-12">
       <strong class="text-secondary">
@@ -41,7 +41,7 @@
       <hr>
     </div>
   </div>
-  <!-- Displaying Comments -->
+  <!-- Displaying episodes -->
   <div class="row">
     <div class="col-md-8 card mb-4 mt-3">
       <h3>Episodes</h3>
@@ -71,7 +71,7 @@
     <!-- Creating New Episodes -->
     <div class="col-md-4 card mb-4 mt-3">
         <div class="card-body">
-          {% if user.is_authenticated %}
+          {% if user.is_authenticated and user == show.administrator %}
           <h3>Add a new episode:</h3>
           <p>Posting as: {{ user.username }}</p>
           <form id="episodeForm" method="post" style="margin-top: 1.3em;">

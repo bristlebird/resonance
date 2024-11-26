@@ -4,6 +4,7 @@
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
+{% url 'dashboard' as dashboard_url %}
 
 <!DOCTYPE html>
 <html class="h-100" lang="en">
@@ -32,8 +33,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}"><span class="brand">Resonance <span
-                        class="thin">Podcaster</span></span></a>
+            <a class="navbar-brand" href="{% url 'home' %}"><span class="brand">Resonance <span class="thin">Podcaster</span></span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -46,7 +46,12 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == about_url %}active{%endif%}" aria-current="page" href="{% url 'about' %}">About</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav navbar-right mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == dashboard_url %}active{% endif %}" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page" href="{% url 'account_logout' %}">Logout</a>
                     </li>
@@ -57,7 +62,7 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page" href="{% url 'account_login' %}">Login</a>
                     </li>
-                    {% endif %}
+                    {% endif %}                    
                 </ul>
             </div>
         </div>

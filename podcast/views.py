@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib import messages
@@ -68,5 +70,43 @@ def podcast_detail(request, slug):
             "episodes": episodes,
             "episode_count": episode_count,
             "episode_form": episode_form,
+        },
+    )
+
+# dashboard access is available to logged in users only
+@login_required(login_url='/accounts/login/')
+def dashboard(request):
+    """
+    Display content added by logged in user:
+    - list of podcasts :model:`podcast.Podcast`.
+    - list of epsiodes :model:`podcast.Episode`.
+
+    **Context**
+
+    ``shows``
+        All instances of :model:`podcast.Podcast` added by user.
+    ``episodes``
+        All instances of :model:`podcast.Episode` added by user.
+
+    **Template:**
+
+    :template:`podcast/dashboard.html`
+    """    
+    # user = get_object_or_404(User, user=request.user)
+    user = request.user
+    shows = user.podcast_shows.all()
+    show_count = shows.count()
+    episodes = user.podcast_administrator.all()
+    episode_count = episodes.count()
+
+    return render(
+        request,
+        "podcast/dashboard.html",
+        {
+            "shows": shows,
+            "show_count": show_count,
+            "episodes": episodes,
+            "episode_count": episode_count,
+            # "episode_form": episode_form,
         },
     )

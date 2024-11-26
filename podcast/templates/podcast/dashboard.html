@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="masthead">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-md-6 masthead-text">
+                <h1 class="post-title">My Podcasts</h1>
+            </div>
+            <div class="d-none d-md-block col-md-6 masthead-image">
+                <img src="{% static 'images/default.jpg' %}" class="scale" alt="placeholder">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Displaying Podcast shows -->
+        <div class="col-12 mt-3 left">
+            <div class="row">
+                {% for show in shows %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="image-container">
+                                <div class="image-flash">
+                                    <p class="author">Author: {{ show.author }}</p>
+                                </div>
+                            </div>
+                            <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
+                                <h2 class="card-title">{{ show.title }}</h2>
+                                <p class="card-text">{{ show.description | safe }}</p>
+                            </a>
+
+                            <hr />
+                            <p class="card-text text-muted h6">{{ show.created_on}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:3 %}
+            </div>
+            <div class="row">
+                {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+      <!-- Displaying episodes -->
+    <div class="row">
+        <div class="col-md-8 card mb-4 mt-3">
+            <h3>Podcast Episodes</h3>
+            <div class="card-body">
+                {% for episode in episodes %}
+                <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                    <p class="font-weight-bold">{{ episode.administrator }} <span class="font-weight-normal">{{ episode.created_on }}</span></p>
+                    <div id="episode{{ episode.id }}">
+                        <h3>{{ episode.title }}</h3>
+                        {{ episode.description | safe }}
+                    </div>
+                    {% if not episode.status and episode.administrator == user %}
+                    <p class="approval">This epsiode is in draft</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block copyright %}
+    &copy; 2024 Bristlebird
+{% endblock %}
