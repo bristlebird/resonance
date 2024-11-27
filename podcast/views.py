@@ -108,7 +108,7 @@ def episode_delete(request, slug, episode_id):
     podcast = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
 
-    if episode.administrator == request.user:
+    if podcast.administrator == request.user:
         episode.delete()
         messages.add_message(request, messages.SUCCESS, 'Episode deleted!')
     else:
