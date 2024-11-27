@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+
 # from podcast.categories import CATEGORY_CHOICES
 # from podcast.languages import LANGUAGE_CHOICES
 
@@ -18,6 +20,7 @@ class Podcast(models.Model):
     author = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     # artwork = models.CharField(max_length=200, blank=True, default='path/to/image/file')
+    artwork = CloudinaryField('image', default='placeholder')
     # primary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     # secondary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     copyright = models.CharField(max_length=200, blank=True)
