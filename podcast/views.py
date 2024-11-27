@@ -86,7 +86,9 @@ def episode_edit(request, slug, episode_id):
         episode = get_object_or_404(Episode, pk=episode_id)
         episode_form = EpisodeForm(data=request.POST, instance=episode)
 
-        if episode_form.is_valid() and episode.administrator == request.user:
+        # check form is valid and logged in user is podcast admin 
+        # (not episode admin)
+        if episode_form.is_valid() and podcast.administrator == request.user:
             episode = episode_form.save(commit=False)
             episode.podcast = podcast
             # episode.approved = False

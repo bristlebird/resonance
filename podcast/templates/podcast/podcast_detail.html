@@ -48,7 +48,7 @@
             <div class="card-body">
                 {% for episode in episodes %}
                 <div
-                    class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                    class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
                     <p class="font-weight-bold">
                         {{ episode.administrator }}
                         <span class="font-weight-normal">{{ episode.created_on }}</span>
@@ -57,10 +57,10 @@
                     <div id="episodeDesc{{ episode.id }}">
                         {{ episode.description | safe }}
                     </div>
-                    {% if not episode.status and episode.administrator == user %}
+                    {% if not episode.status and show.administrator == user %}
                     <p class="approval">This episode is in draft</p>
                     {% endif %}
-                    {% if user.is_authenticated and episode.administrator == user %}
+                    {% if user.is_authenticated and show.administrator == user %}
                     <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
                     <button class="btn btn-edit" data-episode_id="{{ episode.id }}">Edit</button>
                     {% endif %}
