@@ -20,7 +20,7 @@ class Podcast(models.Model):
     author = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     # artwork = models.CharField(max_length=200, blank=True, default='path/to/image/file')
-    artwork = CloudinaryField('image', default='placeholder')
+    artwork = CloudinaryField('image', default='placeholder', folder='resonance/images')
     # primary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     # secondary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     copyright = models.CharField(max_length=200, blank=True)
