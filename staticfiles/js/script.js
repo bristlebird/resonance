@@ -1,1 +1,1 @@
-console.log('Welcome to Resonance Podcaster');
+console.log("Life, The Universe and Everything!");
