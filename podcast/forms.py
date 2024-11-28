@@ -12,8 +12,8 @@ class EpisodeForm(ModelForm):
         Specify the django model and order of the fields
         """
         model = Episode
-        fields = ('title', 'description', 'author', 'keywords', 'type',
-            'season_number', 'episode_number', 'alt_episode_url', 
+        fields = ('title', 'description', 'audiofile', 'author', 'keywords',
+            'type', 'season_number', 'episode_number', 'alt_episode_url', 
             'video_url', 'explicit_content_warning', 'status')
         # widgets = {
         #     'description': Textarea(attrs={'cols': 80, 'rows': 20}),
@@ -21,4 +21,7 @@ class EpisodeForm(ModelForm):
         labels = {
             'author': _('Podcast creator'),
         }
+        # help_text = {
+        #     'audiofile': _('mp3 audio files under 10MB only'),
+        # }
      

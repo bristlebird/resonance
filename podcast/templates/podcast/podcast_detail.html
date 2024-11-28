@@ -43,8 +43,9 @@
                             {{ episode.description | safe }}
                         </div>
                         {% if "resonance/audio" in episode.audiofile.url %}       
-                        <div class="controls">
-                            <audio controls src="{{ episode.audiofile.url }}" id="epAudio{{ episode.id }}" ></audio>    
+                        <div class="controls my-4">
+                            <h5 class="mb-3">Listen to the episode</h5>
+                            <audio controls src="{{ episode.audiofile.url }}" id="epAudiofile{{ episode.id }}" ></audio>    
                         </div>
                         {% endif %}
                         <p class="fw-light small faded">Added <span

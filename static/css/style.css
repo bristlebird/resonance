@@ -99,6 +99,10 @@ body {
     border-radius: .75rem !important;
 }
 
+audio {
+    width: 100%;
+}
+
 /* .post-link:hover, */
 .page-link {
     color: #E84610;
