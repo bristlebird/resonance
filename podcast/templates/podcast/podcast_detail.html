@@ -45,7 +45,7 @@
                     <div id="episodeDesc{{ episode.id }}">
                         {{ episode.description | safe }}
                     </div>
-                    <p class="fw-light small">Added <span class="font-weight-normal">{{ episode.created_on }}</span></p>
+                    <p class="fw-light small faded">Added <span class="font-weight-normal">{{ episode.created_on }}</span></p>
                     {% if not episode.status and show.administrator == user %}
                     <p class="approval">This episode is in draft</p>
                     {% endif %}
