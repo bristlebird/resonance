@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils.text import slugify
 from .models import Podcast, Episode
 from .forms import EpisodeForm
 
@@ -61,6 +62,7 @@ def podcast_detail(request, slug):
             episode = episode_form.save(commit=False)
             episode.administrator = request.user
             episode.podcast = show
+            episode.slug = slugify(episode.title)
             episode.save()
             messages.add_message(
                 request, messages.SUCCESS,
