@@ -24,7 +24,7 @@ class EpisodeAdmin(SummernoteModelAdmin):
     filters, fields to prepopulate and rich-text editor.
     """
 
-    list_display = ('title', 'podcast', 'status')
+    list_display = ('title', 'podcast', 'episode_number', 'status')
     search_fields = ['title', 'description']
     list_filter = ('status', 'created_on',)
     prepopulated_fields = {'slug': ('title',)}

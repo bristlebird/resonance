@@ -1,6 +1,27 @@
+from django.core.files.uploadedfile import UploadedFile
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+
+# For testing model validation
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 50  # 50mb
+
+
+def file_validation(file):
+    if not file:
+        raise ValidationError("No file selected.")
+
+    # For regular upload, we get UploadedFile instance, so we can validate it.
+    # When using direct upload from the browser, here we get an instance of the CloudinaryResource
+    # and file is already uploaded to Cloudinary.
+    # Still can perform all kinds on validations and maybe delete file, approve moderation, perform analysis, etc.
+    if isinstance(file, UploadedFile):
+        if file.size > FILE_UPLOAD_MAX_MEMORY_SIZE:
+            raise ValidationError("File shouldn't be larger than 50MB.")
+        if file.format != 'mp3':
+            raise ValidationError("File must be in mp3 format.")
+
 
 # from podcast.categories import CATEGORY_CHOICES
 # from podcast.languages import LANGUAGE_CHOICES
@@ -67,7 +88,13 @@ class Episode(models.Model):
     administrator = models.ForeignKey(
         User, on_delete=models.CASCADE, default="", related_name="podcast_administrator"
     )
-    # audiofile = models.FileField()
+    audiofile = CloudinaryField(
+        'audio',
+        default='placeholder',
+        folder='resonance/audio',
+        resource_type='auto',
+        format="mp3",
+    )
     author = models.CharField(max_length=200, blank=True)
     keywords = models.CharField(max_length=200, blank=True)
     type = models.CharField(choices=EPISODE_TYPES, default="Normal")

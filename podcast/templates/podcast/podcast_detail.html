@@ -31,20 +31,38 @@
         </div>
         <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} mb-4 mt-3">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body episodes">
                     <h2 class="card-title my-3 p-2">Episodes</h2>
                     {% for episode in episodes %}
-                    <div class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
-                        <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
-                        <div id="episodeDesc{{ episode.id }}">
+                    <div class="p-2 {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                        <p><span class="badge rounded-pill bg-light text-dark">Episode <span id="epEpNum{{ episode.id }}">{{ episode.episode_number }}</span></span></p>
+                        <h3 id="epTitle{{ episode.id }}">
+                            {{ episode.title }}
+                        </h3>                        
+                        <div id="epDesc{{ episode.id }}">
                             {{ episode.description | safe }}
                         </div>
+                        {% if "resonance/audio" in episode.audiofile.url %}       
+                        <div class="controls">
+                            <audio controls src="{{ episode.audiofile.url }}" id="epAudio{{ episode.id }}" ></audio>    
+                        </div>
+                        {% endif %}
                         <p class="fw-light small faded">Added <span
                                 class="font-weight-normal">{{ episode.created_on }}</span></p>
                         {% if not episode.status and show.administrator == user %}
                         <p class="approval">This episode is in draft</p>
                         {% endif %}
                         {% if user.is_authenticated and show.administrator == user %}
+                        <div class="episode-extras d-none">
+                            <div id="epAuthor{{ episode.id }}">{{ show.author }}</div>
+                            <div id="epKeywords{{ episode.id }}">{{ episode.keywords }}</div>
+                            <div id="epType{{ episode.id }}">{{ episode.type }}</div>
+                            <div id="epSeasonNum{{ episode.id }}">{{ episode.season_number }}</div>
+                            <div id="epExplicit{{ episode.id }}">{{ episode.explicit_content_warning }}</div>
+                            <div id="epAltEpUrl{{ episode.id }}">{{ episode.alt_episode_url }}</div>
+                            <div id="epVideoUrl{{ episode.id }}">{{ episode.video_url }}</div>
+                            <div id="epStatus{{ episode.id }}">{{ episode.status }}</div>
+                        </div>
                         <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
                         <button class="btn btn-edit" data-episode_id="{{ episode.id }}">Edit</button>
                         {% endif %}
