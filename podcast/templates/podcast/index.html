@@ -4,43 +4,41 @@
 {% block content %}
 
 <!-- index.html content starts here -->
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-
-        <!-- Blog Entries Column -->
+        <h1 class="text-center my-5">Recently Added Podcasts</h1>
+        <!-- Podcast Entries -->
         <div class="col-12 mt-3 left">
             <div class="row">
                 {% for show in podcast_list %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="image-container">
+                <div class="col-lg-6">
+                    <div class="card mb-3 p-4 rounded-xl">
+                        <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
+                        <div class="row g-0">                            
+                            <div class="col-md-4">
                                 {% if "placeholder" in show.artwork.url %}
-                                <img class="card-img-top" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                                <img class="img-fluid rounded-3" src="{% static 'images/default.jpg' %}" alt="placeholder image">
                                 {% else %}
-                                <img class="card-img-top" src=" {{ show.artwork.url }}" alt="{{ show.title }}">
-                                {% endif %}                              
-                                <div class="image-flash">
-                                    <p class="author">{{ show.author }}</p>
-                                </div>
+                                <img class="img-fluid rounded-3" src=" {{ show.artwork.url }}" alt="{{ show.title }}">
+                                {% endif %}
                             </div>
-                            <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
-                                <h2 class="card-title">{{ show.title }}</h2>
-                                <p class="card-text">{{ show.description | safe }}</p>
-                            </a>
-
-                            <hr />
-                            <p class="card-text text-muted h6">{{ show.created_on}}
-                            </p>
+                            <div class="col-md-8">
+                                <div class="card-body ps-4 pt-0">
+                                    <h2 class="card-title">{{ show.title }}</h2>
+                                    <p class="card-text">{{ show.excerpt | safe }}</p>
+                                    <!-- <p class="card-text"><small class="text-muted">Created by {{ show.author }} on {{ show.created_on}}</small></p> -->
+                                    <p class="card-ctoa">Go to show</p>
+                                </div>
+                            </div>                            
                         </div>
+                        </a>
                     </div>
                 </div>
-                {% if forloop.counter|divisibleby:3 %}
+                {% if forloop.counter|divisibleby:2 %}
             </div>
             <div class="row">
                 {% endif %}
                 {% endfor %}
-
             </div>
         </div>
     </div>
@@ -62,5 +60,5 @@
 {% endblock %}
 
 {% block copyright %}
-    &copy; 2024 Bristlebird
+&copy; 2024 Bristlebird
 {% endblock %}

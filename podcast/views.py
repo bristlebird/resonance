@@ -38,6 +38,12 @@ def podcast_detail(request, slug):
 
     ``show``
         An instance of :model:`podcast.Podcast`.
+    ``epsiodes``
+        All epsiodes related to the podcast.
+    ``epsiode_count``
+        Number of published episodes related to the podcast.
+    ``epsiode_form``
+        An instance of :form: `podcast.EpisodeForm`
 
     **Template:**
 
@@ -77,7 +83,16 @@ def podcast_detail(request, slug):
 
 def episode_edit(request, slug, episode_id):
     """
-    view to edit episodes
+    Display an individual episode to edit
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``episode``
+        A single episode related to the podcast.
+    ``episode_form``
+        An instance of :form: `podcast.EpisodeForm`
     """
     if request.method == "POST":
 
@@ -102,7 +117,14 @@ def episode_edit(request, slug, episode_id):
 
 def episode_delete(request, slug, episode_id):
     """
-    view to delete episode
+    Delete an individual episode
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``episode``
+        A single episode related to the podcast.
     """
     queryset = Podcast.objects.filter(status=1)
     podcast = get_object_or_404(queryset, slug=slug)

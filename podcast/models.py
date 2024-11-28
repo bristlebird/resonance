@@ -5,11 +5,16 @@ from cloudinary.models import CloudinaryField
 # from podcast.categories import CATEGORY_CHOICES
 # from podcast.languages import LANGUAGE_CHOICES
 
-
 STATUS = ((0, "Draft"), (1, "Published"))
 
 # Create your models here.
+
+
 class Podcast(models.Model):
+    """
+    Stores a single podcast entry related to :model: `auth.User` 
+    and :model: `podcast.Episode` 
+    """
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     administrator = models.ForeignKey(
@@ -19,6 +24,7 @@ class Podcast(models.Model):
     )
     author = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+    excerpt = models.TextField(blank=True)
     # artwork = models.CharField(max_length=200, blank=True, default='path/to/image/file')
     artwork = CloudinaryField('image', default='placeholder', folder='resonance/images')
     # primary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
@@ -42,6 +48,10 @@ class Podcast(models.Model):
 
 
 class Episode(models.Model):
+    """
+    Stores a single episode entry related to :model: `auth.User` 
+    and :model: `podcast.Podcast` 
+    """
 
     EPISODE_TYPES = (
         ("Normal", "Normal"), 

@@ -30,33 +30,22 @@
             </div>
         </div>
     </div>
-    <!-- Displaying count of episodes -->
+    <!-- Displaying episodes -->
     <div class="row">
-        <div class="col-12">
-            <strong class="text-secondary">
-                <i class="far fa-comments"></i> {{ episode_count }}
-            </strong>
-        </div>
         <div class="col-12">
             <hr>
         </div>
-    </div>
-    <!-- Displaying episodes -->
-    <div class="row">
-        <div class="col-md-8 card mb-4 mt-3">
-            <h3>Episodes</h3>
+        <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} card mb-4 mt-3">
+            
             <div class="card-body">
+                <h2 class="card-title my-3">Episodes</h2>
                 {% for episode in episodes %}
-                <div
-                    class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
-                    <p class="font-weight-bold">
-                        {{ episode.administrator }}
-                        <span class="font-weight-normal">{{ episode.created_on }}</span>
-                    </p>
+                <div class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
                     <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
                     <div id="episodeDesc{{ episode.id }}">
                         {{ episode.description | safe }}
                     </div>
+                    <p class="fw-light small">Added <span class="font-weight-normal">{{ episode.created_on }}</span></p>
                     {% if not episode.status and show.administrator == user %}
                     <p class="approval">This episode is in draft</p>
                     {% endif %}
@@ -69,9 +58,9 @@
             </div>
         </div>
         <!-- Creating New Episodes -->
-        <div class="col-md-4 card mb-4 mt-3">
-            <div class="card-body">
-                {% if user.is_authenticated and user == show.administrator %}
+        {% if user.is_authenticated and user == show.administrator %}
+        <div class="col-md-6 card mb-4 mt-3">
+            <div class="card-body">                
                 <h3>Add a new episode:</h3>
                 <p>Posting as: {{ user.username }}</p>
                 <form id="episodeForm" method="post" style="margin-top: 1.3em;">
@@ -79,9 +68,9 @@
                     {% csrf_token %}
                     <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
                 </form>
-                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 <!-- Delete confirmation modal -->
