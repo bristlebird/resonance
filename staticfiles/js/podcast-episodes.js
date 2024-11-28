@@ -1,7 +1,16 @@
 const editButtons = document.getElementsByClassName("btn-edit");
-const episodeTitle = document.getElementById("id_title");
-const episodeText = document.getElementById("id_description");
-const episodeForm = document.getElementById("episodeForm");
+const epTitle = document.getElementById("id_title");
+const epText = document.getElementById("id_description");
+// const epAuthor = document.getElementById("id_author");
+// const epKeywords = document.getElementById("id_keywords");
+// const epType = document.getElementById("id_type");
+// const epSeasonNum = document.getElementById("id_season_number");
+// const epEpNum = document.getElementById("id_episode_number");
+// const epExplicit = document.getElementById("id_explicit_content_warning");
+// const epAltEpUrl = document.getElementById("id_alt_episode_url");
+// const epVideoUrl = document.getElementById("id_video_url");
+// const epStatus = document.getElementById("id_status");
+const epForm = document.getElementById("episodeForm");
 const submitButton = document.getElementById("submitButton");
 
 const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
@@ -20,13 +29,13 @@ const deleteConfirm = document.getElementById("deleteConfirm");
 */
 for (let button of editButtons) {
   button.addEventListener("click", (e) => {
-    let episodeId = e.target.getAttribute("data-episode_id");
-    let episodeTitleVal = document.getElementById(`episodeTitle${episodeId}`).innerText;
-    let episodeDescVal = document.getElementById(`episodeDesc${episodeId}`).innerText;
-    episodeTitle.value = episodeTitleVal;
-    episodeText.value = episodeDescVal;
+    let epId = e.target.getAttribute("data-episode_id");
+    let epTitleVal = document.getElementById(`episodeTitle${epId}`).innerText;
+    let epDescVal = document.getElementById(`episodeDesc${epId}`).innerText;
+    epTitle.value = epTitleVal;
+    epText.value = epDescVal;
     submitButton.innerText = "Update";
-    episodeForm.setAttribute("action", `edit_episode/${episodeId}`);
+    epForm.setAttribute("action", `edit_episode/${epId}`);
   });
 }
 
@@ -42,8 +51,8 @@ for (let button of editButtons) {
 */
 for (let button of deleteButtons) {
     button.addEventListener("click", (e) => {
-      let episodeId = e.target.getAttribute("data-episode_id");
-      deleteConfirm.href = `delete_episode/${episodeId}`;
+      let epId = e.target.getAttribute("data-episode_id");
+      deleteConfirm.href = `delete_episode/${epId}`;
       deleteModal.show();
     });
 }

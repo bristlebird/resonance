@@ -2,72 +2,72 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-<div class="masthead">
-    <div class="container">
-        <div class="row g-0">
-            <div class="col-md-6 masthead-text">
-                <!-- Post title goes in these h1 tags -->
-                <h1 class="post-title">{{ show.title }}</h1>
-                <!-- Post author goes before the | the post's created date goes after -->
-                <p class="post-subtitle">{{ show.author }} | {{ show.created_on }}</p>
-            </div>
-            <div class="d-none d-md-block col-md-6 masthead-image">
-                <img src="{% static 'images/default.jpg' %}" class="scale" alt="placeholder">
-            </div>
+<div class="container">
+    <div class="row g-0 my-5">
+        <div class="col-md-7">
+            <!-- Post title goes in these h1 tags -->
+            <h1 class="">{{ show.title }}</h1>
+            <p class="h4">{{ show.author }}</p>
+            <article class="card-text mt-5 pe-5">
+                {{ show.description | safe }}
+            </article>
+            <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
+        </div>
+        <div class="col-md-5">
+            {% if "placeholder" in show.artwork.url %}
+            <img class="scale rounded-xl" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+            {% else %}
+            <img class="scale rounded-xl" src=" {{ show.artwork.url }}" alt="{{ show.title }}">
+            {% endif %}
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col card mb-4  mt-3 left  top">
-            <div class="card-body">
-                <!-- The post content goes inside the card-text. -->
-                <!-- Use the | safe filter inside the template tags -->
-                <article class="card-text">
-                    {{ show.description | safe }}
-                </article>
-            </div>
-        </div>
-    </div>
     <!-- Displaying episodes -->
     <div class="row">
         <div class="col-12">
             <hr>
         </div>
-        <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} card mb-4 mt-3">
-            
-            <div class="card-body">
-                <h2 class="card-title my-3">Episodes</h2>
-                {% for episode in episodes %}
-                <div class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
-                    <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
-                    <div id="episodeDesc{{ episode.id }}">
-                        {{ episode.description | safe }}
+        <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} mb-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title my-3 p-2">Episodes</h2>
+                    {% for episode in episodes %}
+                    <div class="p-2 episodes {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
+                        <h3 id="episodeTitle{{ episode.id }}">{{ episode.title }}</h3>
+                        <div id="episodeDesc{{ episode.id }}">
+                            {{ episode.description | safe }}
+                        </div>
+                        <p class="fw-light small faded">Added <span
+                                class="font-weight-normal">{{ episode.created_on }}</span></p>
+                        {% if not episode.status and show.administrator == user %}
+                        <p class="approval">This episode is in draft</p>
+                        {% endif %}
+                        {% if user.is_authenticated and show.administrator == user %}
+                        <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
+                        <button class="btn btn-edit" data-episode_id="{{ episode.id }}">Edit</button>
+                        {% endif %}
+                        {% if forloop.last == False %}
+                        <hr>
+                        {% endif %}
                     </div>
-                    <p class="fw-light small faded">Added <span class="font-weight-normal">{{ episode.created_on }}</span></p>
-                    {% if not episode.status and show.administrator == user %}
-                    <p class="approval">This episode is in draft</p>
-                    {% endif %}
-                    {% if user.is_authenticated and show.administrator == user %}
-                    <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
-                    <button class="btn btn-edit" data-episode_id="{{ episode.id }}">Edit</button>
-                    {% endif %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
         <!-- Creating New Episodes -->
         {% if user.is_authenticated and user == show.administrator %}
-        <div class="col-md-6 card mb-4 mt-3">
-            <div class="card-body">                
-                <h3>Add a new episode:</h3>
-                <p>Posting as: {{ user.username }}</p>
-                <form id="episodeForm" method="post" style="margin-top: 1.3em;">
-                    {{ episode_form | crispy }}
-                    {% csrf_token %}
-                    <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
-                </form>
+        <div class="col-md-6 mb-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title my-3 p-2">Add a new episode</h2>
+                    <form id="episodeForm" method="post" class="p-2">
+                        {{ episode_form | crispy }}
+                        {% csrf_token %}
+                        <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
         {% endif %}
