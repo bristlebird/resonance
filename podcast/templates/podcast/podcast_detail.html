@@ -17,7 +17,7 @@
             {% if "placeholder" in show.artwork.url %}
             <img class="scale rounded-xl" src="{% static 'images/default.jpg' %}" alt="placeholder image">
             {% else %}
-            <img class="scale rounded-xl" src=" {{ show.artwork.url }}" alt="{{ show.title }}">
+            <img class="scale rounded-xl" src="{{ show.artwork.url }}" alt="{{ show.title }}">
             {% endif %}
         </div>
     </div>
@@ -29,7 +29,8 @@
         <div class="col-12">
             <hr>
         </div>
-        <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} mb-4 mt-3">
+        <!-- <div class="{% if user.is_authenticated and user == show.administrator %}col-md-6{% else %}col-md-12{% endif %} mb-4 mt-3"> -->
+        <div class="col-md-12 mb-4 mt-3">
             <div class="card">
                 <div class="card-body episodes">
                     <h2 class="card-title my-3 p-2">Episodes</h2>
@@ -65,7 +66,8 @@
                             <div id="epStatus{{ episode.id }}">{{ episode.status }}</div>
                         </div>
                         <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
-                        <button class="btn btn-primary" data-episode_id="{{ episode.id }}">Edit</button>
+                        <!-- <button class="btn btn-primary" data-episode_id="{{ episode.id }}">Edit</button> -->
+                        <a class="btn btn-primary" href="edit-episode/{{ episode.id }}">Edit</a>
                         {% endif %}
                         {% if forloop.last == False %}
                         <hr>
@@ -77,7 +79,7 @@
         </div>
         <!-- Creating New Episodes -->
         {% if user.is_authenticated and user == show.administrator %}
-        <div class="col-md-6 mb-4 mt-3">
+        <!-- <div class="col-md-6 mb-4 mt-3">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title my-3 p-2">Add a new episode</h2>
@@ -88,7 +90,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
         {% endif %}
     </div>
 </div>

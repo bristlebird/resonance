@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="container">
+    <div class="row g-0 my-5">
+        <div class="col-md-7">
+            <!-- Post title goes in these h1 tags -->
+            <h1 class="">{{ show.title }}</h1>
+            <p class="h4">{{ show.author }}</p>
+            <div class="card-text mt-5 pe-5">
+                {{ show.description | safe }}
+            </div>
+            <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
+        </div>
+        <div class="col-md-5">
+            {% if "placeholder" in show.artwork.url %}
+            <img class="scale rounded-xl" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+            {% else %}
+            <img class="scale rounded-xl" src="{{ show.artwork.url }}" alt="{{ show.title }}">
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <hr>
+        </div>
+        <!-- Edit selected episode -->
+        {% if user.is_authenticated and user == show.administrator %}
+        <div class="col-md-12 mb-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <p><span class="badge rounded-pill bg-light text-dark">Episode {{ episode.episode_number }}</span></p>
+                    <h2 class="card-title my-3 p-2">Edit episode: {{ episode.title }}</h2>
+                    <form id="episodeForm" method="post" class="p-2">
+                        {{ episode_form | crispy }}
+                        {% csrf_token %}
+                        <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>    
+</div>
+
+{% endblock content %}
+
+{% block extras %}
+{% endblock %}

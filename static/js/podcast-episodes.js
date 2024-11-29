@@ -28,25 +28,25 @@ const deleteConfirm = document.getElementById("deleteConfirm");
 * - Updates the submit button's text to "Update".
 * - Sets the form's action attribute to the `edit_episode/{episodeId}` endpoint.
 */
-for (let button of editButtons) {
-  button.addEventListener("click", (e) => {
-    let epId = e.target.getAttribute("data-episode_id");
-    epTitle.value = document.getElementById(`epTitle${epId}`).innerText;
-    epText.value = document.getElementById(`epDesc${epId}`).innerText;
-    // epAudiofile.src = document.getElementById(`epAudiofile${epId}`).getAttribute("src");
-    epAuthor.value = document.getElementById(`epAuthor${epId}`).innerText;
-    epKeywords.value = document.getElementById(`epKeywords${epId}`).innerText;
-    epType.value = document.getElementById(`epType${epId}`).innerText;
-    epSeasonNum.value = document.getElementById(`epSeasonNum${epId}`).innerText;
-    epEpNum.value = document.getElementById(`epEpNum${epId}`).innerText;
-    epExplicit.value = document.getElementById(`epExplicit${epId}`).innerText;
-    epAltEpUrl.value = document.getElementById(`epAltEpUrl${epId}`).innerText;
-    epVideoUrl.value = document.getElementById(`epVideoUrl${epId}`).innerText;
-    epStatus.value = document.getElementById(`epStatus${epId}`).innerText;
-    submitButton.innerText = "Update";
-    epForm.setAttribute("action", `edit_episode/${epId}`);
-  });
-}
+// for (let button of editButtons) {
+//   button.addEventListener("click", (e) => {
+//     let epId = e.target.getAttribute("data-episode_id");
+//     epTitle.value = document.getElementById(`epTitle${epId}`).innerText;
+//     epText.value = document.getElementById(`epDesc${epId}`).innerText;
+//     // epAudiofile.src = document.getElementById(`epAudiofile${epId}`).getAttribute("src");
+//     epAuthor.value = document.getElementById(`epAuthor${epId}`).innerText;
+//     epKeywords.value = document.getElementById(`epKeywords${epId}`).innerText;
+//     epType.value = document.getElementById(`epType${epId}`).innerText;
+//     epSeasonNum.value = document.getElementById(`epSeasonNum${epId}`).innerText;
+//     epEpNum.value = document.getElementById(`epEpNum${epId}`).innerText;
+//     epExplicit.value = document.getElementById(`epExplicit${epId}`).innerText;
+//     epAltEpUrl.value = document.getElementById(`epAltEpUrl${epId}`).innerText;
+//     epVideoUrl.value = document.getElementById(`epVideoUrl${epId}`).innerText;
+//     epStatus.value = document.getElementById(`epStatus${epId}`).innerText;
+//     submitButton.innerText = "Update";
+//     epForm.setAttribute("action", `edit_episode/${epId}`);
+//   });
+// }
 
 /**
 * Initializes deletion functionality for the provided delete buttons.
@@ -61,7 +61,7 @@ for (let button of editButtons) {
 for (let button of deleteButtons) {
     button.addEventListener("click", (e) => {
       let epId = e.target.getAttribute("data-episode_id");
-      deleteConfirm.href = `delete_episode/${epId}`;
+      deleteConfirm.href = `delete-episode/${epId}`;
       deleteModal.show();
     });
 }

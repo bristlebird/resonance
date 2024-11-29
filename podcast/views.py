@@ -7,6 +7,22 @@ from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from .models import Podcast, Episode
 from .forms import EpisodeForm
+import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+if not os.getenv('CLOUDINARY_API_SECRET'):
+    raise Exception('CLOUDINARY_API_SECRET environment variable is not set.')
+
+# configure cloudinary to serve files over https to avoid mixed / insecure content warnings
+cloudinary.config(
+  cloud_name = 'bristlebird',
+  api_key = '566277371789765',
+  api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+  secure = True,
+)
+
+
 
 
 class PodcastList(generic.ListView):
@@ -82,8 +98,55 @@ def podcast_detail(request, slug):
         },
     )
 
-
+@login_required(login_url='/accounts/login/')
 def episode_edit(request, slug, episode_id):
+    """
+    Display an individual episode to edit
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``episode``
+        A single episode related to the podcast.
+    ``episode_form``
+        An instance of :form: `podcast.EpisodeForm`
+    """
+
+    queryset = Podcast.objects.filter(status=1)
+    show = get_object_or_404(queryset, slug=slug)
+    episode = get_object_or_404(Episode, pk=episode_id)
+
+    if request.method == "POST":
+
+        # episode_form = EpisodeForm(data=request.POST)
+        episode_form = EpisodeForm(request.POST, request.FILES, instance=episode)
+
+        # episode_form = EpisodeForm(data=request.POST)
+        if episode_form.is_valid() and show.administrator == request.user:
+            episode = episode_form.save(commit=False)
+            episode.administrator = request.user
+            episode.podcast = show
+            episode.slug = slugify(episode.title)
+            episode.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Episode Updated!')
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'Error updating episode!')
+
+    episode_form = EpisodeForm(instance=episode)
+
+    context = {
+        "show": show,
+        "episode": episode,
+        "episode_form": episode_form,
+    }
+
+    return render(request, "podcast/episode_edit.html", context)
+
+
+def episode_edit_onpage(request, slug, episode_id):
     """
     Display an individual episode to edit
 
@@ -142,7 +205,7 @@ def episode_delete(request, slug, episode_id):
 
 
 # dashboard access is available to logged in users only
-@login_required(login_url='/accounts/login/')
+# @login_required(login_url='/accounts/login/')
 def dashboard(request):
     """
     Display content added by logged in user:
