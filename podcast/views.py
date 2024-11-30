@@ -199,6 +199,7 @@ def episode_add(request, slug):
             episode.administrator = request.user
             episode.podcast = show
             episode.slug = slugify(episode.title)
+            # print("files in request(add) = ",request.FILES)
             episode.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Episode added!')
@@ -238,6 +239,7 @@ def episode_edit(request, slug, episode_id):
     if request.method == "POST":
         episode_form = EpisodeForm(request.POST, request.FILES, instance=episode)
         if episode_form.is_valid() and show.administrator == request.user:
+            print("files in request(edit) = ",request.FILES)
             episode = episode_form.save(commit=False)
             episode.administrator = request.user
             episode.podcast = show
