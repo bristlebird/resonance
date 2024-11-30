@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from .models import Podcast, Episode
-from .forms import EpisodeForm
+from .forms import EpisodeForm, PodcastForm
 import os
 import cloudinary
 import cloudinary.uploader
@@ -55,11 +55,11 @@ def podcast_detail(request, slug):
 
     ``show``
         An instance of :model:`podcast.Podcast`.
-    ``epsiodes``
-        All epsiodes related to the podcast.
-    ``epsiode_count``
+    ``episodes``
+        All episodes related to the podcast.
+    ``episode_count``
         Number of published episodes related to the podcast.
-    ``epsiode_form``
+    ``episode_form``
         An instance of :form: `podcast.EpisodeForm`
 
     **Template:**
@@ -67,7 +67,8 @@ def podcast_detail(request, slug):
     :template:`podcast/podcast_detail.html`
     """
 
-    queryset = Podcast.objects.filter(status=1)
+    # queryset = Podcast.objects.filter(status=1)
+    queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     episodes = show.podcast_episodes.all().order_by("-episode_number")
     episode_count = show.podcast_episodes.filter(status=1).count()
@@ -98,6 +99,82 @@ def podcast_detail(request, slug):
         },
     )
 
+# dashboard access is available to logged in users only
+@login_required(login_url='/accounts/login/')
+def dashboard(request):
+    """
+    Display content added by logged in user:
+    - list of podcasts :model:`podcast.Podcast`.
+    - list of episodes :model:`podcast.Episode`.
+
+    **Context**
+
+    ``shows``
+        All instances of :model:`podcast.Podcast` added by user.
+    ``episodes``
+        All instances of :model:`podcast.Episode` added by user.
+
+    **Template:**
+
+    :template:`podcast/dashboard.html`
+    """    
+    # user = get_object_or_404(User, user=request.user)
+    user = request.user
+    shows = user.podcast_shows.all()
+    show_count = shows.count()
+    episodes = user.podcast_administrator.all()
+    episode_count = episodes.count()
+
+    return render(
+        request,
+        "podcast/dashboard.html",
+        {
+            "shows": shows,
+            "show_count": show_count,
+            "episodes": episodes,
+            "episode_count": episode_count,
+            # "episode_form": episode_form,
+        },
+    )
+
+# dashboard access is available to logged in users only
+@login_required(login_url='/accounts/login/')
+def podcast_add(request):
+    """
+    Add a new podcast :model:`podcast.Podcast`.
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``podcast_form``
+        An instance of :form: `podcast.PodcastForm`
+    **Template:**
+
+    :template:`podcast/podcast_add.html`
+    """    
+    if request.method == "POST":
+        podcast_form = PodcastForm(request.POST, request.FILES)
+        if podcast_form.is_valid():
+            podcast = podcast_form.save(commit=False)
+            podcast.administrator = request.user
+            podcast.slug = slugify(podcast.title)
+            podcast.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Podcast added!')
+            return HttpResponseRedirect(reverse('podcast_detail', args=[podcast.slug]))  
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'Error adding podcast!')
+
+    podcast_form = PodcastForm()
+    context = {
+        # "podcast": podcast,
+        "podcast_form": podcast_form,
+    }
+    return render(request, "podcast/podcast_add.html", context)
+
+
 @login_required(login_url='/accounts/login/')
 def episode_add(request, slug):
     """
@@ -113,7 +190,7 @@ def episode_add(request, slug):
         An instance of :form: `podcast.EpisodeForm`
     """
 
-    queryset = Podcast.objects.filter(status=1)
+    queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     if request.method == "POST":
         episode_form = EpisodeForm(request.POST, request.FILES)
@@ -140,6 +217,7 @@ def episode_add(request, slug):
 
 
 
+@login_required(login_url='/accounts/login/')
 def episode_edit(request, slug, episode_id):
     """
     Display an individual episode to edit
@@ -154,7 +232,7 @@ def episode_edit(request, slug, episode_id):
         An instance of :form: `podcast.EpisodeForm`
     """
 
-    queryset = Podcast.objects.filter(status=1)
+    queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
     if request.method == "POST":
@@ -215,6 +293,7 @@ def episode_edit_onpage(request, slug, episode_id):
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
 
 
+@login_required(login_url='/accounts/login/')
 def episode_delete(request, slug, episode_id):
     """
     Delete an individual episode
@@ -226,7 +305,7 @@ def episode_delete(request, slug, episode_id):
     ``episode``
         A single episode related to the podcast.
     """
-    queryset = Podcast.objects.filter(status=1)
+    queryset = Podcast.objects.all()
     podcast = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
 
@@ -239,40 +318,3 @@ def episode_delete(request, slug, episode_id):
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
 
 
-# dashboard access is available to logged in users only
-# @login_required(login_url='/accounts/login/')
-def dashboard(request):
-    """
-    Display content added by logged in user:
-    - list of podcasts :model:`podcast.Podcast`.
-    - list of epsiodes :model:`podcast.Episode`.
-
-    **Context**
-
-    ``shows``
-        All instances of :model:`podcast.Podcast` added by user.
-    ``episodes``
-        All instances of :model:`podcast.Episode` added by user.
-
-    **Template:**
-
-    :template:`podcast/dashboard.html`
-    """    
-    # user = get_object_or_404(User, user=request.user)
-    user = request.user
-    shows = user.podcast_shows.all()
-    show_count = shows.count()
-    episodes = user.podcast_administrator.all()
-    episode_count = episodes.count()
-
-    return render(
-        request,
-        "podcast/dashboard.html",
-        {
-            "shows": shows,
-            "show_count": show_count,
-            "episodes": episodes,
-            "episode_count": episode_count,
-            # "episode_form": episode_form,
-        },
-    )

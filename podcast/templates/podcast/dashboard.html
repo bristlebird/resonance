@@ -6,55 +6,41 @@
 <div class="container">
     <div class="row">
         <h1 class="text-center my-5">My Podcasts</h1>
+        <div class="text-center mb-5"><a class="btn btn-primary" href="add-podcast">Add New Podcast</a></div>
         <!-- Displaying Podcast shows -->
         <div class="col-12 mt-3 left">
             <div class="row">
                 {% for show in shows %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="image-container">
-                                <div class="image-flash">
-                                    <p class="author">Author: {{ show.author }}</p>
-                                </div>
+                <div class="col-lg-6 {% if not episode.status %}faded{% endif %}">
+                    <div class="card mb-3 p-4 rounded-xl">
+                        <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
+                        <div class="row g-0">                            
+                            <div class="col-md-4">
+                                {% if "placeholder" in show.artwork.url %}
+                                <img class="img-fluid rounded-3" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                                {% else %}
+                                <img class="img-fluid rounded-3" src="{{ show.artwork.url }}" alt="{{ show.title }}">
+                                {% endif %}
                             </div>
-                            <a href="{% url 'podcast_detail' show.slug %}" class="post-link">
-                                <h2 class="card-title">{{ show.title }}</h2>
-                                <p class="card-text">{{ show.description | safe }}</p>
-                            </a>
-
-                            <hr />
-                            <p class="card-text text-muted h6">{{ show.created_on}}
-                            </p>
+                            <div class="col-md-8">
+                                <div class="card-body ps-4 pt-0">
+                                    <h2 class="card-title">{{ show.title }}</h2>
+                                    <p class="card-text">{{ show.excerpt | safe }}</p>
+                                    <!-- <p class="card-text"><small class="text-muted">Created by {{ show.author }} on {{ show.created_on}}</small></p> -->
+                                    <p class="card-ctoa">Go to show</p>
+                                    {% if not show.status %}
+                                    <p class="approval">This podcast is in draft</p>
+                                    {% endif %}
+                                </div>
+                            </div>                            
                         </div>
+                        </a>
                     </div>
                 </div>
-                {% if forloop.counter|divisibleby:3 %}
+                {% if forloop.counter|divisibleby:2 %}
             </div>
             <div class="row">
                 {% endif %}
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-
-      <!-- Displaying episodes -->
-    <div class="row">
-        <div class="col-md-8 card mb-4 mt-3">
-            <h3>Podcast Episodes</h3>
-            <div class="card-body">
-                {% for episode in episodes %}
-                <div class="p-2 episodes {% if not episode.status and episode.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
-                    <p class="font-weight-bold">{{ episode.administrator }} <span class="font-weight-normal">{{ episode.created_on }}</span></p>
-                    <div id="episode{{ episode.id }}">
-                        <h3>{{ episode.title }}</h3>
-                        {{ episode.description | safe }}
-                    </div>
-                    {% if not episode.status and episode.administrator == user %}
-                    <p class="approval">This epsiode is in draft</p>
-                    {% endif %}
-                </div>
                 {% endfor %}
             </div>
         </div>
