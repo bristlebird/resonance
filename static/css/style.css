@@ -204,3 +204,7 @@ audio {
     align-items: center;
     min-height: 100vh;
  }
+
+ .modal {
+    color: var(--text-dark);
+ }

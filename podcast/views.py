@@ -99,6 +99,47 @@ def podcast_detail(request, slug):
     )
 
 @login_required(login_url='/accounts/login/')
+def episode_add(request, slug):
+    """
+    Add a new episode to a show
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``episode``
+        A single episode related to the podcast.
+    ``episode_form``
+        An instance of :form: `podcast.EpisodeForm`
+    """
+
+    queryset = Podcast.objects.filter(status=1)
+    show = get_object_or_404(queryset, slug=slug)
+    if request.method == "POST":
+        episode_form = EpisodeForm(request.POST, request.FILES)
+        if episode_form.is_valid() and show.administrator == request.user:
+            episode = episode_form.save(commit=False)
+            episode.administrator = request.user
+            episode.podcast = show
+            episode.slug = slugify(episode.title)
+            episode.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Episode added!')
+            return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))  
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'Error adding episode!')
+
+    episode_form = EpisodeForm()
+    context = {
+        "show": show,
+        # "episode": episode,
+        "episode_form": episode_form,
+    }
+    return render(request, "podcast/episode_add.html", context)
+
+
+
 def episode_edit(request, slug, episode_id):
     """
     Display an individual episode to edit
@@ -116,13 +157,8 @@ def episode_edit(request, slug, episode_id):
     queryset = Podcast.objects.filter(status=1)
     show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
-
     if request.method == "POST":
-
-        # episode_form = EpisodeForm(data=request.POST)
         episode_form = EpisodeForm(request.POST, request.FILES, instance=episode)
-
-        # episode_form = EpisodeForm(data=request.POST)
         if episode_form.is_valid() and show.administrator == request.user:
             episode = episode_form.save(commit=False)
             episode.administrator = request.user
@@ -136,13 +172,12 @@ def episode_edit(request, slug, episode_id):
                 request, messages.ERROR, 'Error updating episode!')
 
     episode_form = EpisodeForm(instance=episode)
-
     context = {
         "show": show,
         "episode": episode,
+        # "episodes": episodes,
         "episode_form": episode_form,
     }
-
     return render(request, "podcast/episode_edit.html", context)
 
 

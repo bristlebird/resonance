@@ -23,4 +23,7 @@ class EpisodeForm(ModelForm):
         labels = {
             'author': _('Podcast creator'),
         }
+        widgets = {
+            'description': SummernoteWidget(),
+        }
      
