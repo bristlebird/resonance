@@ -34,14 +34,55 @@
         <div class="col-md-12 mb-4 mt-3">
             <div class="card">
                 <div class="card-body">
-                    <!-- <p><span class="badge rounded-pill bg-light text-dark">Add New Episode</span></p> -->
                     <h2 class="card-title my-3 p-2">Add a new episode</h2>
                     <hr>
-                    <form id="episodeForm" method="post" class="p-2">
-                        {{ episode_form | crispy }}
+                    <form id="episodeForm" method="post" class="p-2" enctype="multipart/form-data">
+                        {{ episode_form.title|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <p class="mb-2">Audio File</p>
+                                {{ episode_form.audiofile }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.author|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.keywords|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-0">
+                                {{ episode_form.type|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4 mb-0">
+                                {{ episode_form.season_number|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4 mb-0">
+                                {{ episode_form.episode_number|as_crispy_field }}
+                            </div>
+                        </div>
+                        {{ episode_form.description|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.alt_episode_url|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.video_url|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.explicit_content_warning|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ episode_form.status|as_crispy_field }}
+                            </div>
+                        </div>
                         {% csrf_token %}
                         <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
-                    </form>
+                    </form>                    
                 </div>
             </div>
         </div>

@@ -7,28 +7,27 @@ from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from .models import Podcast, Episode
 from .forms import EpisodeForm, PodcastForm
-import os
+# import os
+
+# Import the Cloudinary libraries
+# ===============================
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-if not os.getenv('CLOUDINARY_API_SECRET'):
-    raise Exception('CLOUDINARY_API_SECRET environment variable is not set.')
 
-# configure cloudinary to serve files over https to avoid mixed / insecure content warnings
+# Set Cloudinary to serve files
+# over https to avoid mixed / insecure content warnings
+# ===============================
 cloudinary.config(
-  cloud_name = 'bristlebird',
-  api_key = '566277371789765',
-  api_secret = os.getenv('CLOUDINARY_API_SECRET'),
-  secure = True,
+    cloud_name='bristlebird',
+    secure=True
 )
-
-
 
 
 class PodcastList(generic.ListView):
     """
     Returns all published podcasts in :model:`podcast.Podcast`
-    and displays them in a page of six podcasts. 
+    and displays them in a page of six podcasts.
 
     **Context**
 
@@ -36,7 +35,7 @@ class PodcastList(generic.ListView):
         All published instances of :model:`podcast.Podcast`
     ``paginate_by``
         Number of podcasts per page.
-        
+
     **Template:**
 
     :template:`podcast/index.html`
@@ -70,7 +69,7 @@ def podcast_detail(request, slug):
     # queryset = Podcast.objects.filter(status=1)
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
-    episodes = show.podcast_episodes.all().order_by("-episode_number")
+    episodes = show.podcast_episodes.all().order_by("episode_number")
     episode_count = show.podcast_episodes.filter(status=1).count()
 
     if request.method == "POST":
@@ -99,6 +98,7 @@ def podcast_detail(request, slug):
         },
     )
 
+
 # dashboard access is available to logged in users only
 @login_required(login_url='/accounts/login/')
 def dashboard(request):
@@ -117,7 +117,7 @@ def dashboard(request):
     **Template:**
 
     :template:`podcast/dashboard.html`
-    """    
+    """
     # user = get_object_or_404(User, user=request.user)
     user = request.user
     shows = user.podcast_shows.all()
@@ -137,6 +137,7 @@ def dashboard(request):
         },
     )
 
+
 # dashboard access is available to logged in users only
 @login_required(login_url='/accounts/login/')
 def podcast_add(request):
@@ -152,7 +153,7 @@ def podcast_add(request):
     **Template:**
 
     :template:`podcast/podcast_add.html`
-    """    
+    """
     if request.method == "POST":
         podcast_form = PodcastForm(request.POST, request.FILES)
         if podcast_form.is_valid():
@@ -162,7 +163,8 @@ def podcast_add(request):
             podcast.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Podcast added!')
-            return HttpResponseRedirect(reverse('podcast_detail', args=[podcast.slug]))  
+            return HttpResponseRedirect(
+                reverse('podcast_detail', args=[podcast.slug]))
         else:
             messages.add_message(
                 request, messages.ERROR, 'Error adding podcast!')
@@ -199,11 +201,11 @@ def episode_add(request, slug):
             episode.administrator = request.user
             episode.podcast = show
             episode.slug = slugify(episode.title)
-            # print("files in request(add) = ",request.FILES)
+            print("files in request(add) = ", request.FILES)
             episode.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Episode added!')
-            return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))  
+            return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
         else:
             messages.add_message(
                 request, messages.ERROR, 'Error adding episode!')
@@ -215,7 +217,6 @@ def episode_add(request, slug):
         "episode_form": episode_form,
     }
     return render(request, "podcast/episode_add.html", context)
-
 
 
 @login_required(login_url='/accounts/login/')
@@ -237,13 +238,17 @@ def episode_edit(request, slug, episode_id):
     show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
     if request.method == "POST":
-        episode_form = EpisodeForm(request.POST, request.FILES, instance=episode)
+        episode_form = EpisodeForm(
+            request.POST, request.FILES, instance=episode
+        )
         if episode_form.is_valid() and show.administrator == request.user:
-            print("files in request(edit) = ",request.FILES)
+            print("files in request(edit) = ", request.FILES)
             episode = episode_form.save(commit=False)
             episode.administrator = request.user
             episode.podcast = show
             episode.slug = slugify(episode.title)
+            # if file clear checkbox is selected,
+            # file should be deleted from cloudinary
             episode.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Episode Updated!')
@@ -281,16 +286,20 @@ def episode_edit_onpage(request, slug, episode_id):
         episode = get_object_or_404(Episode, pk=episode_id)
         episode_form = EpisodeForm(data=request.POST, instance=episode)
 
-        # check form is valid and logged in user is podcast admin 
+        # check form is valid and logged in user is podcast admin
         # (not episode admin)
         if episode_form.is_valid() and podcast.administrator == request.user:
             episode = episode_form.save(commit=False)
             episode.podcast = podcast
             # episode.approved = False
             episode.save()
-            messages.add_message(request, messages.SUCCESS, 'Episode Updated!')
+            messages.add_message(
+                request, messages.SUCCESS, 'Episode Updated!'
+            )
         else:
-            messages.add_message(request, messages.ERROR, 'Error updating episode!')
+            messages.add_message(
+                request, messages.ERROR, 'Error updating episode!'
+            )
 
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
 
@@ -312,11 +321,25 @@ def episode_delete(request, slug, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
 
     if podcast.administrator == request.user:
+        # delete audio file from cloudinary
+        # https://cloudinary.com/documentation/image_upload_api_reference#destroy
+        # use django cleanup or post_delete signals to delete orphaned files?
+        if episode.audiofile:
+            result = cloudinary.uploader.destroy(
+                episode.audiofile.public_id,
+                invalidate=True,
+                resource_type="video"
+            )
+        #     print(result)
+        # else:
+        #     print('no audio to delete')
         episode.delete()
-        messages.add_message(request, messages.SUCCESS, 'Episode deleted!')
+        messages.add_message(
+            request, messages.SUCCESS, 'Episode deleted!'
+        )
     else:
-        messages.add_message(request, messages.ERROR, 'You can only delete your own episodes!')
+        messages.add_message(
+            request, messages.ERROR, 'You can only delete your own episodes!'
+        )
 
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
-
-

@@ -3,8 +3,23 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+# if not os.getenv('CLOUDINARY_API_SECRET'):
+#     raise Exception('CLOUDINARY_API_SECRET environment variable is not set.')
 
-# For testing model validation
+# # configure cloudinary to serve files over https to avoid mixed / insecure content warnings
+cloudinary.config(
+#   cloud_name = 'bristlebird',
+#   api_key = '566277371789765',
+#   api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+  secure = True,
+)
+
+
+
+# For testing model validation: https://github.com/cloudinary/cloudinary-django-sample/blob/master/photo_album/models.py
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 50  # 50mb
 
 
@@ -93,11 +108,12 @@ class Episode(models.Model):
         User, on_delete=models.CASCADE, default="", related_name="podcast_administrator"
     )
     audiofile = CloudinaryField(
-        'audio',
-        default='placeholder',
+        'audio file',
+        # default='placeholder',
         folder='resonance/audio',
         resource_type='auto',
         format="mp3",
+        # validators=[file_validation],
     )
     author = models.CharField(max_length=200, blank=True)
     keywords = models.CharField(max_length=200, blank=True)
@@ -119,3 +135,9 @@ class Episode(models.Model):
 
     def __str__(self):
         return f"{self.title} | added by {self.administrator}"
+
+    # def delete(self, using=None):
+    #     # self.audiofile.delete()
+    #     result = cloudinary.uploader.destroy(episode.audiofile.public_id, invalidate=True, resource_type="video")
+    #     print(result)
+    #     super().delete()

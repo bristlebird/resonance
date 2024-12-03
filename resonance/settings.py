@@ -67,9 +67,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# cloudinary.config(
-#     secure = True,
-# )
+SUMMERNOTE_CONFIG = {
+    # You can put custom Summernote settings
+    'summernote': {
+        # Change editor size
+        'width': '100%',
+    },
+}
 
 
 MIDDLEWARE = [
