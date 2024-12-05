@@ -79,6 +79,7 @@ class PodcastForm(ModelForm):
     """
     Form class for users to add a podcast
     """
+    artwork = forms.ImageField(required=False, error_messages = {'invalid':_("Image files only")}, widget=forms.ClearableFileInput)
     class Meta:
         """
         Specify the django model and order of the fields

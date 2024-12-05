@@ -10,11 +10,48 @@
                 <div class="card-body">
                     <h2 class="card-title my-3 p-2">Add a new podcast</h2>
                     <hr>
-                    <form id="podcastForm" method="post" class="p-2">
+                    <!-- <form id="podcastForm" method="post" class="p-2">
                         {{ podcast_form | crispy }}
                         {% csrf_token %}
                         <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
-                    </form>
+                    </form> -->
+                    <form id="podcastForm" method="post" class="p-2" enctype="multipart/form-data">
+                        {{ podcast_form.title|as_crispy_field }}
+                        {{ podcast_form.description|as_crispy_field }}
+                        {{ podcast_form.excerpt|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <p class="mb-2">Artwork</p>
+                                {{ podcast_form.artwork }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.author|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.copyright|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.keywords|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.website|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.explicit_content_warning|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.status|as_crispy_field }}
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
+                    </form>                    
                 </div>
             </div>
         </div>
