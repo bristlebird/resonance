@@ -13,8 +13,8 @@ urlpatterns = [
         views.episode_delete, name='episode_delete'),
     path('dashboard/add-podcast',
         views.podcast_add, name='podcast_add'),
-    # path('dashboard/edit-podcast/<int:podcast_id>',
-    #     views.podcast_edit, name='podcast_edit'),
+    path('dashboard/edit-podcast/<int:podcast_id>',
+        views.podcast_edit, name='podcast_edit'),
     # path('dashboard/delete-podcast/<int:podcast_id>',
     #     views.podcast_delete, name='podcast_delete'),
 ]

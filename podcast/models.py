@@ -71,7 +71,7 @@ class Podcast(models.Model):
     # secondary_category = models.CharField(choices=categories.CATEGORY_CHOICES)
     copyright = models.CharField(max_length=200, blank=True)
     keywords = models.CharField(max_length=200, blank=True)
-    website = models.CharField(max_length=200, blank=True)
+    website = models.URLField(max_length=200, blank=True)
     # spoken_language = models.CharField(choices=languages.LANGUAGE_CHOICES, default="en")
     owner_name = models.CharField(max_length=200, blank=True)
     owner_email = models.CharField(max_length=200, blank=True)

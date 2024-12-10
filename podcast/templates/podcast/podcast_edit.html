@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <hr>
+        </div>
+        <!-- Edit selected Podcast -->
+        {% if user.is_authenticated and user == show.administrator %}
+        <div class="col-md-12 mb-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <!-- <h2 class="card-title my-3 p-2">Edit podcast:  -->
+                    <h2 class="d-flex justify-content-between card-title my-3 p-2"><span>Edit podcast: <a href="{% url 'podcast_detail' show.slug %}" class="link">{{ show.title }}</a></span> <a class="btn btn-primary" href="{% url 'podcast_detail' show.slug %}">&laquo; Back to Podcast</a></h2>
+                    <form id="episodeForm" method="post" class="p-2" enctype="multipart/form-data">
+                        {{ podcast_form.title|as_crispy_field }}
+                        {{ podcast_form.description|as_crispy_field }}
+                        {{ podcast_form.excerpt|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {% if "resonance/images" in show.artwork.url %}       
+                                <p class="mb-2">Current Artwork Image</p>
+                                <img class="mb-3" src="{{ show.artwork.url }}" id="pdImagefile{{ show.id }}" alt="poster image for {{ show.title }}">
+                                <p class="mb-2">Replace Artwork Image</p>
+                                {% else %}
+                                <p class="mb-2">Artwork Image</p>
+                                {% endif %}
+                                {{ podcast_form.artwork }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.author|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.copyright|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.keywords|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.website|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.explicit_content_warning|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.status|as_crispy_field }}
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extras %}
+{% endblock %}

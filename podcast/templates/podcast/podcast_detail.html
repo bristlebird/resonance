@@ -12,6 +12,12 @@
                 {{ show.description | safe }}
             </div>
             <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
+            {% if user.is_authenticated and show.administrator == user %}
+            <div class="manage-podcast">
+                <button class="btn btn-delete" data-podcast_id="{{ show.id }}" title="Delete podcast">Delete</button>
+                <a class="btn btn-primary" href="/dashboard/edit-podcast/{{ show.id }}" title="Edit podcast">Edit</a>
+            </div>
+            {% endif %}
         </div>
         <div class="col-md-5">
             {% if "placeholder" in show.artwork.url %}
@@ -56,7 +62,7 @@
                         <p class="approval">This episode is in draft</p>
                         {% endif %}
                         {% if user.is_authenticated and show.administrator == user %}
-                        <div class="episode-extras d-none">
+                        <!-- <div class="episode-extras d-none">
                             <div id="epAuthor{{ episode.id }}">{{ show.author }}</div>
                             <div id="epKeywords{{ episode.id }}">{{ episode.keywords }}</div>
                             <div id="epType{{ episode.id }}">{{ episode.type }}</div>
@@ -65,10 +71,9 @@
                             <div id="epAltEpUrl{{ episode.id }}">{{ episode.alt_episode_url }}</div>
                             <div id="epVideoUrl{{ episode.id }}">{{ episode.video_url }}</div>
                             <div id="epStatus{{ episode.id }}">{{ episode.status }}</div>
-                        </div>
-                        <button class="btn btn-delete" data-episode_id="{{ episode.id }}">Delete</button>
-                        <!-- <button class="btn btn-primary" data-episode_id="{{ episode.id }}">Edit</button> -->
-                        <a class="btn btn-primary" href="edit-episode/{{ episode.id }}">Edit</a>
+                        </div> -->
+                        <button class="btn btn-delete" data-episode_id="{{ episode.id }}" title="Delete episode">Delete</button>
+                        <a class="btn btn-primary" href="edit-episode/{{ episode.id }}" title="Edit episode">Edit</a>
                         {% endif %}
                         {% if forloop.last == False %}
                         <hr>

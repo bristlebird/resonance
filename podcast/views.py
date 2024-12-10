@@ -172,10 +172,50 @@ def podcast_add(request):
 
     podcast_form = PodcastForm()
     context = {
-        # "podcast": podcast,
         "podcast_form": podcast_form,
     }
     return render(request, "podcast/podcast_add.html", context)
+
+
+@login_required(login_url='/accounts/login/')
+def podcast_edit(request, podcast_id):
+    """
+    Display an individual podcast to edit
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``podcast_form``
+        An instance of :form: `podcast.PodcastForm`
+    """
+
+    queryset = Podcast.objects.all()
+    show = get_object_or_404(queryset, pk=podcast_id)
+    if request.method == "POST":
+        podcast_form = PodcastForm(
+            request.POST, request.FILES, instance=show
+        )
+        if podcast_form.is_valid() and show.administrator == request.user:
+            print("files in request(edit) = ", request.FILES)
+            show = podcast_form.save(commit=False)
+            show.administrator = request.user
+            show.slug = slugify(show.title)
+            # if file clear checkbox is selected,
+            # image file should be deleted from cloudinary
+            show.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Podcast updated!')
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'Error updating podcast!')
+
+    podcast_form = PodcastForm(instance=show)
+    context = {
+        "show": show,
+        "podcast_form": podcast_form,
+    }
+    return render(request, "podcast/podcast_edit.html", context)
 
 
 @login_required(login_url='/accounts/login/')
@@ -214,7 +254,6 @@ def episode_add(request, slug):
     episode_form = EpisodeForm()
     context = {
         "show": show,
-        # "episode": episode,
         "episode_form": episode_form,
     }
     return render(request, "podcast/episode_add.html", context)
@@ -249,7 +288,7 @@ def episode_edit(request, slug, episode_id):
             episode.podcast = show
             episode.slug = slugify(episode.title)
             # if file clear checkbox is selected,
-            # file should be deleted from cloudinary
+            # audio file should be deleted from cloudinary
             episode.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Episode Updated!')
@@ -265,44 +304,6 @@ def episode_edit(request, slug, episode_id):
         "episode_form": episode_form,
     }
     return render(request, "podcast/episode_edit.html", context)
-
-
-def episode_edit_onpage(request, slug, episode_id):
-    """
-    Display an individual episode to edit
-
-    **Context**
-
-    ``podcast``
-        An instance of :model: `podcast.Podcast`
-    ``episode``
-        A single episode related to the podcast.
-    ``episode_form``
-        An instance of :form: `podcast.EpisodeForm`
-    """
-    if request.method == "POST":
-
-        queryset = Podcast.objects.filter(status=1)
-        podcast = get_object_or_404(queryset, slug=slug)
-        episode = get_object_or_404(Episode, pk=episode_id)
-        episode_form = EpisodeForm(data=request.POST, instance=episode)
-
-        # check form is valid and logged in user is podcast admin
-        # (not episode admin)
-        if episode_form.is_valid() and podcast.administrator == request.user:
-            episode = episode_form.save(commit=False)
-            episode.podcast = podcast
-            # episode.approved = False
-            episode.save()
-            messages.add_message(
-                request, messages.SUCCESS, 'Episode Updated!'
-            )
-        else:
-            messages.add_message(
-                request, messages.ERROR, 'Error updating episode!'
-            )
-
-    return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
 
 
 @login_required(login_url='/accounts/login/')
