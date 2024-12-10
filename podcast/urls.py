@@ -15,6 +15,6 @@ urlpatterns = [
         views.podcast_add, name='podcast_add'),
     path('dashboard/edit-podcast/<int:podcast_id>',
         views.podcast_edit, name='podcast_edit'),
-    # path('dashboard/delete-podcast/<int:podcast_id>',
-    #     views.podcast_delete, name='podcast_delete'),
+    path('<slug:slug>/delete-podcast/<int:podcast_id>',
+        views.podcast_delete, name='podcast_delete'),
 ]

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -219,6 +219,54 @@ def podcast_edit(request, podcast_id):
 
 
 @login_required(login_url='/accounts/login/')
+def podcast_delete(request, slug, podcast_id):
+    """
+    Delete an individual podcast
+
+    **Context**
+
+    ``podcast``
+        An instance of :model: `podcast.Podcast`
+    ``episodes``
+        All episodes related to the podcast.
+    """
+
+    queryset = Podcast.objects.all()
+    show = get_object_or_404(queryset, pk=podcast_id)
+    episodes = show.podcast_episodes.all()
+    episode_count = show.podcast_episodes.filter(status=1).count()
+
+
+    if show.administrator == request.user:
+        for episode in episodes:
+        # delete audio files from cloudinary
+        # https://cloudinary.com/documentation/image_upload_api_reference#destroy
+        # use django cleanup or post_delete signals to delete orphaned files?
+            if episode.audiofile:
+                result = cloudinary.uploader.destroy(
+                    episode.audiofile.public_id,
+                    invalidate=True,
+                    resource_type="video"
+                )
+            # then delete the episode — may not be required due to
+            # on_delete=models.CASCADE being set in Episode.podcast model
+            # episode.delete()     
+        #     print(result)
+        # else:
+        #     print('no audio to delete')
+        show.delete()
+        messages.add_message(
+            request, messages.SUCCESS, 'Podcast deleted!'
+        )
+    else:
+        messages.add_message(
+            request, messages.ERROR, 'You can only delete your own podcasts!'
+        )
+
+    return redirect('/dashboard/')
+
+
+@login_required(login_url='/accounts/login/')
 def episode_add(request, slug):
     """
     Add a new episode to a show
@@ -319,10 +367,10 @@ def episode_delete(request, slug, episode_id):
         A single episode related to the podcast.
     """
     queryset = Podcast.objects.all()
-    podcast = get_object_or_404(queryset, slug=slug)
+    show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
 
-    if podcast.administrator == request.user:
+    if show.administrator == request.user:
         # delete audio file from cloudinary
         # https://cloudinary.com/documentation/image_upload_api_reference#destroy
         # use django cleanup or post_delete signals to delete orphaned files?

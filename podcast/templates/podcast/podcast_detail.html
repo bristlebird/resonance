@@ -14,7 +14,7 @@
             <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
             {% if user.is_authenticated and show.administrator == user %}
             <div class="manage-podcast">
-                <button class="btn btn-delete" data-podcast_id="{{ show.id }}" title="Delete podcast">Delete</button>
+                <button class="btn btn-delete btn-delete-podcast" data-podcast_id="{{ show.id }}" title="Delete podcast">Delete</button>
                 <a class="btn btn-primary" href="/dashboard/edit-podcast/{{ show.id }}" title="Edit podcast">Edit</a>
             </div>
             {% endif %}
@@ -72,7 +72,7 @@
                             <div id="epVideoUrl{{ episode.id }}">{{ episode.video_url }}</div>
                             <div id="epStatus{{ episode.id }}">{{ episode.status }}</div>
                         </div> -->
-                        <button class="btn btn-delete" data-episode_id="{{ episode.id }}" title="Delete episode">Delete</button>
+                        <button class="btn btn-delete btn-delete-episode" data-episode_id="{{ episode.id }}" title="Delete episode">Delete</button>
                         <a class="btn btn-primary" href="edit-episode/{{ episode.id }}" title="Edit episode">Edit</a>
                         {% endif %}
                         {% if forloop.last == False %}
@@ -101,12 +101,32 @@
         {% endif %}
     </div>
 </div>
-<!-- Delete confirmation modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<!-- Delete podcast confirmation modal -->
+<div class="modal fade" id="deletePcModal" tabindex="-1" aria-labelledby="deletePcModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete episode?</h5>
+                <h5 class="modal-title" id="deletePcModalLabel">Delete podcast?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this podcast?
+                    <br>All associated episodes will also be deleted.
+                    <br>This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deletePcConfirm" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete episode confirmation modal -->
+<div class="modal fade" id="deleteEpModal" tabindex="-1" aria-labelledby="deleteEpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteEpModalLabel">Delete episode?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -115,7 +135,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
+                <a id="deleteEpConfirm" href="#" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
