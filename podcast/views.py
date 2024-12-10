@@ -160,6 +160,7 @@ def podcast_add(request):
             podcast = podcast_form.save(commit=False)
             podcast.administrator = request.user
             podcast.slug = slugify(podcast.title)
+            # print("files in request(add) = ", request.FILES)
             podcast.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Podcast added!')
