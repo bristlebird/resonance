@@ -43,36 +43,6 @@ class EpisodeForm(ModelForm):
         widgets = {
             'description': SummernoteWidget(),
         }
-    
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.helper = FormHelper()
-    #     self.helper.layout = Layout(
-    #         'title',
-    #         'audiofile',
-    #         Row(
-    #             Column('author', css_class='form-group col-md-6 mb-0'),
-    #             Column('keywords', css_class='form-group col-md-6 mb-0'),
-    #             css_class='form-row'
-    #         ),
-    #         Row(
-    #             Column('type', css_class='form-group col-md-6 mb-0'),
-    #             Column('season_number', css_class='form-group col-md-4 mb-0'),
-    #             Column('episode_number', css_class='form-group col-md-2 mb-0'),
-    #             css_class='form-row'
-    #         ),
-    #         'description',
-    #         Row(
-    #             Column('alt_episode_url', css_class='form-group col-md-6 mb-0'),
-    #             Column('video_url', css_class='form-group col-md-6 mb-0'),
-    #             css_class='form-row'
-    #         ), 
-    #         Row(
-    #             Column('explicit_content_warning', css_class='form-group col-md-6 mb-0'),
-    #             Column('status', css_class='form-group col-md-6 mb-0'),
-    #             css_class='form-row'
-    #         )
-    #     )
      
 
 class PodcastForm(ModelForm):
@@ -104,5 +74,6 @@ class PodcastForm(ModelForm):
         }
         widgets = {
             'description': SummernoteWidget(),
+            'excerpt': SummernoteWidget(),
         }
     

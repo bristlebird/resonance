@@ -10,11 +10,6 @@
                 <div class="card-body">
                     <h2 class="card-title my-3 p-2">Add a new podcast</h2>
                     <hr>
-                    <!-- <form id="podcastForm" method="post" class="p-2">
-                        {{ podcast_form | crispy }}
-                        {% csrf_token %}
-                        <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
-                    </form> -->
                     <form id="podcastForm" method="post" class="p-2" enctype="multipart/form-data">
                         {{ podcast_form.title|as_crispy_field }}
                         {{ podcast_form.description|as_crispy_field }}
