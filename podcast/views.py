@@ -5,6 +5,7 @@ from django.views import generic
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
+from django.core.exceptions import PermissionDenied
 from .models import Podcast, Episode
 from .forms import EpisodeForm, PodcastForm
 # import os
@@ -189,9 +190,14 @@ def podcast_edit(request, podcast_id):
     ``podcast_form``
         An instance of :form: `podcast.PodcastForm`
     """
-
+     
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, pk=podcast_id)
+    # Raise a 403 error if logged in user is not the podcast / show admin
+    # https://docs.djangoproject.com/en/5.1/ref/views/#the-403-http-forbidden-view
+    if show.administrator != request.user:
+        raise PermissionDenied
+
     if request.method == "POST":
         podcast_form = PodcastForm(
             request.POST, request.FILES, instance=show
@@ -236,8 +242,11 @@ def podcast_delete(request, slug, podcast_id):
     episodes = show.podcast_episodes.all()
     episode_count = show.podcast_episodes.filter(status=1).count()
 
-
-    if show.administrator == request.user:
+    # Raise a 403 error if logged in user is not the podcast / show admin
+    if show.administrator != request.user:
+        raise PermissionDenied
+    else:
+    # if show.administrator == request.user:
         for episode in episodes:
         # delete audio files from cloudinary
         # https://cloudinary.com/documentation/image_upload_api_reference#destroy
@@ -258,10 +267,10 @@ def podcast_delete(request, slug, podcast_id):
         messages.add_message(
             request, messages.SUCCESS, 'Podcast deleted!'
         )
-    else:
-        messages.add_message(
-            request, messages.ERROR, 'You can only delete your own podcasts!'
-        )
+    # else:
+    #     messages.add_message(
+    #         request, messages.ERROR, 'You can only delete your own podcasts!'
+    #     )
 
     return redirect('/dashboard/')
 
@@ -283,6 +292,10 @@ def episode_add(request, slug):
 
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
+    # Raise a 403 error if logged in user is not the podcast / show admin
+    if show.administrator != request.user:
+        raise PermissionDenied
+
     if request.method == "POST":
         episode_form = EpisodeForm(request.POST, request.FILES)
         if episode_form.is_valid() and show.administrator == request.user:
@@ -325,6 +338,10 @@ def episode_edit(request, slug, episode_id):
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
+    # Raise a 403 error if logged in user is not the podcast / show admin
+    if show.administrator != request.user:
+        raise PermissionDenied
+
     if request.method == "POST":
         episode_form = EpisodeForm(
             request.POST, request.FILES, instance=episode
@@ -369,8 +386,10 @@ def episode_delete(request, slug, episode_id):
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     episode = get_object_or_404(Episode, pk=episode_id)
-
-    if show.administrator == request.user:
+    # Raise a 403 error if logged in user is not the podcast / show admin
+    if show.administrator != request.user:
+        raise PermissionDenied
+    else: 
         # delete audio file from cloudinary
         # https://cloudinary.com/documentation/image_upload_api_reference#destroy
         # use django cleanup or post_delete signals to delete orphaned files?
@@ -386,10 +405,6 @@ def episode_delete(request, slug, episode_id):
         episode.delete()
         messages.add_message(
             request, messages.SUCCESS, 'Episode deleted!'
-        )
-    else:
-        messages.add_message(
-            request, messages.ERROR, 'You can only delete your own episodes!'
         )
 
     return HttpResponseRedirect(reverse('podcast_detail', args=[slug]))
