@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic
@@ -6,15 +6,13 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
-from .models import Podcast, Episode
-from .forms import EpisodeForm, PodcastForm
-# import os
-
 # Import the Cloudinary libraries
 # ===============================
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from .models import Podcast, Episode
+from .forms import EpisodeForm, PodcastForm
 
 # Set Cloudinary to serve files
 # over https to avoid mixed / insecure content warnings
@@ -67,7 +65,7 @@ def podcast_detail(request, slug):
     :template:`podcast/podcast_detail.html`
     """
 
-    # queryset = Podcast.objects.filter(status=1)
+    # queryset = Podcast.objects.all()
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     episodes = show.podcast_episodes.all().order_by("episode_number")
@@ -190,7 +188,7 @@ def podcast_edit(request, podcast_id):
     ``podcast_form``
         An instance of :form: `podcast.PodcastForm`
     """
-     
+
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, pk=podcast_id)
     # Raise a 403 error if logged in user is not the podcast / show admin
@@ -225,7 +223,7 @@ def podcast_edit(request, podcast_id):
 
 
 @login_required(login_url='/accounts/login/')
-def podcast_delete(request, slug, podcast_id):
+def podcast_delete(request, podcast_id):
     """
     Delete an individual podcast
 
@@ -240,37 +238,27 @@ def podcast_delete(request, slug, podcast_id):
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, pk=podcast_id)
     episodes = show.podcast_episodes.all()
-    episode_count = show.podcast_episodes.filter(status=1).count()
 
     # Raise a 403 error if logged in user is not the podcast / show admin
     if show.administrator != request.user:
         raise PermissionDenied
     else:
-    # if show.administrator == request.user:
         for episode in episodes:
-        # delete audio files from cloudinary
-        # https://cloudinary.com/documentation/image_upload_api_reference#destroy
-        # use django cleanup or post_delete signals to delete orphaned files?
+            # delete audio files from cloudinary
+            # https://cloudinary.com/documentation/image_upload_api_reference#destroy
+            # use django cleanup or post_delete signals to delete orphaned file
             if episode.audiofile:
-                result = cloudinary.uploader.destroy(
+                cloudinary.uploader.destroy(
                     episode.audiofile.public_id,
                     invalidate=True,
                     resource_type="video"
                 )
-            # then delete the episode — may not be required due to
-            # on_delete=models.CASCADE being set in Episode.podcast model
-            # episode.delete()     
-        #     print(result)
-        # else:
-        #     print('no audio to delete')
+        # no need to specifically delete episodes as deletion handled by
+        # on_delete=models.CASCADE in Episode.podcast model when...
         show.delete()
         messages.add_message(
             request, messages.SUCCESS, 'Podcast deleted!'
         )
-    # else:
-    #     messages.add_message(
-    #         request, messages.ERROR, 'You can only delete your own podcasts!'
-    #     )
 
     return redirect('/dashboard/')
 
@@ -389,12 +377,12 @@ def episode_delete(request, slug, episode_id):
     # Raise a 403 error if logged in user is not the podcast / show admin
     if show.administrator != request.user:
         raise PermissionDenied
-    else: 
+    else:
         # delete audio file from cloudinary
         # https://cloudinary.com/documentation/image_upload_api_reference#destroy
         # use django cleanup or post_delete signals to delete orphaned files?
         if episode.audiofile:
-            result = cloudinary.uploader.destroy(
+            cloudinary.uploader.destroy(
                 episode.audiofile.public_id,
                 invalidate=True,
                 resource_type="video"

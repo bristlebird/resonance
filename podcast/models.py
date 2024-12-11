@@ -2,6 +2,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
+# from django.core.validators import MaxValueValidator, MinValueValidator
 from cloudinary.models import CloudinaryField
 import cloudinary
 import cloudinary.uploader
@@ -19,7 +20,8 @@ cloudinary.config(
 
 
 
-# For testing model validation: https://github.com/cloudinary/cloudinary-django-sample/blob/master/photo_album/models.py
+# For testing model validation:
+# https://github.com/cloudinary/cloudinary-django-sample/blob/master/photo_album/models.py
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 50  # 50mb
 
 
@@ -28,9 +30,10 @@ def file_validation(file):
         raise ValidationError("No file selected.")
 
     # For regular upload, we get UploadedFile instance, so we can validate it.
-    # When using direct upload from the browser, here we get an instance of the CloudinaryResource
-    # and file is already uploaded to Cloudinary.
-    # Still can perform all kinds on validations and maybe delete file, approve moderation, perform analysis, etc.
+    # When using direct upload from the browser, here we get an instance of
+    # the CloudinaryResource and file is already uploaded to Cloudinary.
+    # Still can perform all kinds on validations and maybe delete file,
+    # approve moderation, perform analysis, etc.
     if isinstance(file, UploadedFile):
         if file.size > FILE_UPLOAD_MAX_MEMORY_SIZE:
             raise ValidationError("File shouldn't be larger than 50MB.")
@@ -54,14 +57,11 @@ class Podcast(models.Model):
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     administrator = models.ForeignKey(
-        # User, on_delete=models.CASCADE, related_name="blog_posts"
-        # User, on_delete=models.CASCADE, related_name="podcast_shows, podcast_episodes"
         User, on_delete=models.CASCADE, default="", related_name="podcast_shows"
     )
     author = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     excerpt = models.TextField(blank=True)
-    # artwork = models.CharField(max_length=200, blank=True, default='path/to/image/file')
     artwork = CloudinaryField(
         'image',
         default='placeholder',
@@ -94,7 +94,7 @@ class Episode(models.Model):
     """
 
     EPISODE_TYPES = (
-        ("Normal", "Normal"), 
+        ("Normal", "Normal"),
         ("Trailer", "Trailer"),
         ("Bonus", "Bonus")
     )
@@ -118,10 +118,9 @@ class Episode(models.Model):
     author = models.CharField(max_length=200, blank=True)
     keywords = models.CharField(max_length=200, blank=True)
     type = models.CharField(choices=EPISODE_TYPES, default="Normal")
-    season_number = models.IntegerField(default=1)
-    episode_number = models.IntegerField(blank=True, null=True)
+    season_number = models.PositiveIntegerField(default=1)
+    episode_number = models.PositiveIntegerField(blank=True, null=True)
     description = models.TextField(blank=True)
-    # artwork = models.CharField(max_length=200, blank=True)
     alt_episode_url = models.URLField(max_length=200, blank=True)
     video_url = models.URLField(max_length=200, blank=True)
     explicit_content_warning = models.BooleanField(default=False)
@@ -135,9 +134,3 @@ class Episode(models.Model):
 
     def __str__(self):
         return f"{self.title} | added by {self.administrator}"
-
-    # def delete(self, using=None):
-    #     # self.audiofile.delete()
-    #     result = cloudinary.uploader.destroy(episode.audiofile.public_id, invalidate=True, resource_type="video")
-    #     print(result)
-    #     super().delete()
