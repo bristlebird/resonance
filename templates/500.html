@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center my-5">Error 500</h1>
+        <div class="text-center mb-5">
+            <p>The server encountered an error and could not process your request.</p>
+            <p>If the problem persists, please <a href="mailto:hostmaster@bristlebird.ie?subject=server%20error">report</a> the problem and mention this error message and the the query that caused it.</p>
+            <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block copyright %}
+    &copy; 2024 Bristlebird
+{% endblock %}

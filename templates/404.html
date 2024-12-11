@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center my-5">Error 404 - Page not Found</h1>
+        <div class="text-center mb-5">
+            <p>We're sorry but the page you're looking for either does not exist or may have been removed.</p>
+            <a class="btn btn-primary" href="{% url 'home' %}">Go Home</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block copyright %}
+    &copy; 2024 Bristlebird
+{% endblock %}
