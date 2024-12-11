@@ -39,7 +39,7 @@
         <div class="col-md-12 mb-4 mt-3">
             <div class="card">
                 <div class="card-body episodes">
-                    <h2 class="d-flex justify-content-between card-title my-3 p-2"><span>All Episodes</span> {% if user.is_authenticated and user == show.administrator %}<a class="btn btn-primary" href="add-episode">Add New</a>{% endif %}</h2>
+                    <h2 class="d-flex justify-content-between card-title my-3 p-2"><span>All Episodes</span> {% if user.is_authenticated and user == show.administrator %}<a class="btn btn-primary" href="add-episode#details">Add New</a>{% endif %}</h2>
                     <hr>
                     {% for episode in episodes %}
                     <div class="p-2 {% if not episode.status and show.administrator == user %}faded{% elif not episode.status %} d-none{% endif %}">
