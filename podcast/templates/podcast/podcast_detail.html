@@ -12,8 +12,11 @@
                 {{ show.description | safe }}
             </div>
             <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
+            {% if show_feed %}
+            <p class="my-4"><a class="btn btn-primary" href="/{{ show.slug}}/feed/" title="Subscribe by RSS Feed">Subscribe by RSS</a></p>
+            {% endif %}
             {% if user.is_authenticated and show.administrator == user %}
-            <div class="manage-podcast">
+            <div class="manage-podcast my-3">
                 {% if not show.status %}
                 <p class="approval">This podcast is in draft</p>
                 {% endif %}

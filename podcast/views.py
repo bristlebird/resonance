@@ -53,7 +53,8 @@ class PodcastList(generic.ListView):
 
     :template:`podcast/index.html`
     """
-
+    
+    # should only display published podcasts that have episodes with audio 
     queryset = Podcast.objects.filter(status=1).order_by("-created_on")
     template_name = "podcast/index.html"
     paginate_by = 6
@@ -83,36 +84,45 @@ def podcast_detail(request, slug):
     episodes = show.podcast_episodes.all().order_by("episode_number")
     episode_count = show.podcast_episodes.filter(status=1).count()
 
-    # if request.method == "POST":
-    #     episode_form = EpisodeForm(data=request.POST)
-    #     if episode_form.is_valid():
-    #         episode = episode_form.save(commit=False)
-    #         episode.administrator = request.user
-    #         episode.podcast = show
-    #         episode.slug = slugify(episode.title)
-    #         episode.save()
-    #         messages.add_message(
-    #             request, messages.SUCCESS,
-    #             'Episode added!'
-    #         )
 
-    # episode_form = EpisodeForm()
+    # get collection of published episodes with audio for RSS feed
+    feed_episodes = show.podcast_episodes.filter(
+        status=1,
+        audiofile__contains="resonance/audio"
+    ).order_by("-episode_number")
+
+    # throw 403 if no results, i.e. no published episodes with audio available
+    show_feed = True if feed_episodes else False
+
+    # To display Podcast subscribe button with link to RSS feed:
+    # - podcast must be published &
+    # — audio file uploaded to at least 1 published episode
+    # for episode in episodes:
+    #     audio_available = False
+    #     if 'resonance/audio' in episode.audiofile.url:
+    #         audio_available = True
+    #         break
+
+    # if audio_available == False and show.status == 0:
+    #     raise PermissionDenied
+
 
     return render(
         request,
-        # "podcast/podcast_detail.html",
+        "podcast/podcast_detail.html",
         {
             "show": show,
             "episodes": episodes,
             "episode_count": episode_count,
-            # "show_subscribe": show_subscribe,
+            "show_feed": show_feed,
         },
     )
 
 
 def podcast_feed(request, slug):
     """
-    Output podcast RSS feed from :model:`podcast.Podcast`.
+    Output podcast RSS feed from :model:`podcast.Podcast`
+    when podcast is published & episode published with audio
 
     **Context**
 
@@ -130,30 +140,19 @@ def podcast_feed(request, slug):
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
     # throw 403 if show in draft 
-    if show.status == 0 and show.administrator != request.user:
+    # if show.status == 0 and show.administrator != request.user:
+    if show.status == 0:
         raise PermissionDenied
 
-    # get collection of episode objects that have been published and have audio uploaded
+    # podcast published so get collection of published episodes with audio
     episodes = show.podcast_episodes.filter(
         status=1,
         audiofile__contains="resonance/audio"
     ).order_by("-episode_number")
 
-    # throw 403 if show in draft or no episodes with audio to publish
+    # throw 403 if no results, i.e. no published episodes with audio available
     if not episodes:
         raise PermissionDenied      
-
-    # To display Podcast subscribe button with link to RSS feed:
-    # - podcast must be published &
-    # — audio file uploaded to at least 1 published episode
-    # for episode in episodes:
-    #     audio_available = False
-    #     if 'resonance/audio' in episode.audiofile.url:
-    #         audio_available = True
-    #         break
-
-    # if audio_available == False and show.status == 0:
-    #     raise PermissionDenied
 
     return render(
         request,
@@ -185,22 +184,16 @@ def dashboard(request):
 
     :template:`podcast/dashboard.html`
     """
-    # user = get_object_or_404(User, user=request.user)
     user = request.user
     shows = user.podcast_shows.all()
-    show_count = shows.count()
     episodes = user.podcast_administrator.all()
-    episode_count = episodes.count()
 
     return render(
         request,
         "podcast/dashboard.html",
         {
             "shows": shows,
-            "show_count": show_count,
             "episodes": episodes,
-            "episode_count": episode_count,
-            # "episode_form": episode_form,
         },
     )
 
