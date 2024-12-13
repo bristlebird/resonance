@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEVELOPMENT = os.environ.get("DEVELOPMENT", False)
 DEBUG = DEVELOPMENT
 # DEBUG = 'DEVELOPMENT' in os.environ
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = ['8000-bristlebird-resonance-3ry7mcb5oez.ws.codeinstitute-ide.net', '.herokuapp.com',]

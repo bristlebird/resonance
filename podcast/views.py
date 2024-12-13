@@ -100,7 +100,7 @@ def podcast_detail(request, slug):
 
     return render(
         request,
-        "podcast/podcast_detail.html",
+        # "podcast/podcast_detail.html",
         {
             "show": show,
             "episodes": episodes,
@@ -291,9 +291,10 @@ def podcast_edit(request, podcast_id):
 
 
 @login_required(login_url='/accounts/login/')
-def podcast_delete(request, podcast_id):
+def podcast_delete(request, slug, podcast_id):
     """
-    Delete an individual podcast
+    Delete an individual podcast:
+    `slug` needed for podcast urls, `podcast_id` for query
 
     **Context**
 
@@ -304,6 +305,7 @@ def podcast_delete(request, podcast_id):
     """
 
     queryset = Podcast.objects.all()
+    # show = get_object_or_404(queryset, slug=slug)
     show = get_object_or_404(queryset, pk=podcast_id)
     episodes = show.podcast_episodes.all()
 
