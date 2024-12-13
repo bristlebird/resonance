@@ -22,6 +22,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-0">
+                                {{ podcast_form.type|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                {{ podcast_form.explicit_content_warning|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-0">
                                 {{ podcast_form.author|as_crispy_field }}
                             </div>
                             <div class="col-md-6 mb-0">
@@ -37,10 +45,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-0">
-                                {{ podcast_form.explicit_content_warning|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6 mb-0">
+                            <div class="offset-md-6 col-md-6 mb-0">
                                 {{ podcast_form.status|as_crispy_field }}
                             </div>
                         </div>

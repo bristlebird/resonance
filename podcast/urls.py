@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.PodcastList.as_view(), name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('<slug:slug>/', views.podcast_detail, name='podcast_detail'),
+    path('<slug:slug>/feed/', views.podcast_feed, name='podcast_feed'),
     path('<slug:slug>/add-episode',
         views.episode_add, name='episode_add'),
     path('<slug:slug>/edit-episode/<int:episode_id>',

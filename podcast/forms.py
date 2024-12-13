@@ -23,17 +23,18 @@ class PodcastForm(ModelForm):
         """
         model = Podcast
         fields = (
-            'title', 
-            'description', 
-            'excerpt', 
-            'artwork', 
-            'author', 
-            'copyright', 
-            'keywords', 
-            'website', 
-            'owner_name', 
+            'title',
+            'description',
+            'excerpt',
+            'artwork',
+            'type',
+            'author',
+            'copyright',
+            'keywords',
+            'website',
+            'owner_name',
             'owner_email',
-            'explicit_content_warning', 
+            'explicit_content_warning',
             'status',
         )
         labels = {

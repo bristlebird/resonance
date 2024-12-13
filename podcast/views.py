@@ -1,3 +1,17 @@
+"""
+PODCAST APP VIEWS
+
+- PodcastList: displays list of published podcasts on the home page
+— podcast_detail: displays individual podcast & list of associated episodes
+— dashboard: displays list of podcasts added by loggged in user
+- podcast_add: allows logged in user to add new podcast
+- podcast_edit: allows logged in user to edit existing podcast details
+- podcast_delete: allows logged in user to delete existing podcast
+- episode_add: allows logged in user to add new episode
+- episode_edit: allows logged in user to edit existing episode details
+- episode_delete: allows logged in user to delete existing episode
+
+"""
 # from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, reverse, redirect
@@ -57,8 +71,6 @@ def podcast_detail(request, slug):
         All episodes related to the podcast.
     ``episode_count``
         Number of published episodes related to the podcast.
-    ``episode_form``
-        An instance of :form: `podcast.EpisodeForm`
 
     **Template:**
 
@@ -71,20 +83,20 @@ def podcast_detail(request, slug):
     episodes = show.podcast_episodes.all().order_by("episode_number")
     episode_count = show.podcast_episodes.filter(status=1).count()
 
-    if request.method == "POST":
-        episode_form = EpisodeForm(data=request.POST)
-        if episode_form.is_valid():
-            episode = episode_form.save(commit=False)
-            episode.administrator = request.user
-            episode.podcast = show
-            episode.slug = slugify(episode.title)
-            episode.save()
-            messages.add_message(
-                request, messages.SUCCESS,
-                'Episode added!'
-            )
+    # if request.method == "POST":
+    #     episode_form = EpisodeForm(data=request.POST)
+    #     if episode_form.is_valid():
+    #         episode = episode_form.save(commit=False)
+    #         episode.administrator = request.user
+    #         episode.podcast = show
+    #         episode.slug = slugify(episode.title)
+    #         episode.save()
+    #         messages.add_message(
+    #             request, messages.SUCCESS,
+    #             'Episode added!'
+    #         )
 
-    episode_form = EpisodeForm()
+    # episode_form = EpisodeForm()
 
     return render(
         request,
@@ -93,8 +105,64 @@ def podcast_detail(request, slug):
             "show": show,
             "episodes": episodes,
             "episode_count": episode_count,
-            "episode_form": episode_form,
+            # "show_subscribe": show_subscribe,
         },
+    )
+
+
+def podcast_feed(request, slug):
+    """
+    Output podcast RSS feed from :model:`podcast.Podcast`.
+
+    **Context**
+
+    ``show``
+        An instance of :model:`podcast.Podcast`.
+    ``episodes``
+        All published episodes related to the podcast.
+
+    **Template:**
+
+    :template:`podcast/podcast_feed.xml`
+    """
+
+
+    queryset = Podcast.objects.all()
+    show = get_object_or_404(queryset, slug=slug)
+    # throw 403 if show in draft 
+    if show.status == 0 and show.administrator != request.user:
+        raise PermissionDenied
+
+    # get collection of episode objects that have been published and have audio uploaded
+    episodes = show.podcast_episodes.filter(
+        status=1,
+        audiofile__contains="resonance/audio"
+    ).order_by("-episode_number")
+
+    # throw 403 if show in draft or no episodes with audio to publish
+    if not episodes:
+        raise PermissionDenied      
+
+    # To display Podcast subscribe button with link to RSS feed:
+    # - podcast must be published &
+    # — audio file uploaded to at least 1 published episode
+    # for episode in episodes:
+    #     audio_available = False
+    #     if 'resonance/audio' in episode.audiofile.url:
+    #         audio_available = True
+    #         break
+
+    # if audio_available == False and show.status == 0:
+    #     raise PermissionDenied
+
+    return render(
+        request,
+        "podcast/podcast_feed.xml",
+        {
+            "show": show,
+            "episodes": episodes,
+        },
+        content_type="text/xml",
     )
 
 

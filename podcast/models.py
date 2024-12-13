@@ -7,14 +7,9 @@ from cloudinary.models import CloudinaryField
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-# if not os.getenv('CLOUDINARY_API_SECRET'):
-#     raise Exception('CLOUDINARY_API_SECRET environment variable is not set.')
 
 # # configure cloudinary to serve files over https to avoid mixed / insecure content warnings
 cloudinary.config(
-#   cloud_name = 'bristlebird',
-#   api_key = '566277371789765',
-#   api_secret = os.getenv('CLOUDINARY_API_SECRET'),
   secure = True,
 )
 
@@ -54,13 +49,19 @@ class Podcast(models.Model):
     Stores a single podcast entry related to :model: `auth.User` 
     and :model: `podcast.Episode` 
     """
+
+    PODCAST_TYPES = (
+        ("Episodic", "episodic"),
+        ("Serial", "serial")
+    )
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     administrator = models.ForeignKey(
         User, on_delete=models.CASCADE, default="", related_name="podcast_shows"
     )
-    author = models.CharField(max_length=200, blank=True)
+    author = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    type = models.CharField(choices=PODCAST_TYPES, default="episodic")
     excerpt = models.TextField(blank=True)
     artwork = CloudinaryField(
         'image',

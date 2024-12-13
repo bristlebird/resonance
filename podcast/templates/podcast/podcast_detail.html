@@ -14,6 +14,9 @@
             <p class="small faded">Published on {{ show.created_on | date:"dS F, Y" }}</p>
             {% if user.is_authenticated and show.administrator == user %}
             <div class="manage-podcast">
+                {% if not show.status %}
+                <p class="approval">This podcast is in draft</p>
+                {% endif %}
                 <button class="btn btn-delete btn-delete-podcast" data-podcast_id="{{ show.id }}" title="Delete podcast">Delete</button>
                 <a class="btn btn-primary" href="/dashboard/edit-podcast/{{ show.id }}" title="Edit podcast">Edit</a>
             </div>
@@ -62,16 +65,6 @@
                         <p class="approval">This episode is in draft</p>
                         {% endif %}
                         {% if user.is_authenticated and show.administrator == user %}
-                        <!-- <div class="episode-extras d-none">
-                            <div id="epAuthor{{ episode.id }}">{{ show.author }}</div>
-                            <div id="epKeywords{{ episode.id }}">{{ episode.keywords }}</div>
-                            <div id="epType{{ episode.id }}">{{ episode.type }}</div>
-                            <div id="epSeasonNum{{ episode.id }}">{{ episode.season_number }}</div>
-                            <div id="epExplicit{{ episode.id }}">{{ episode.explicit_content_warning }}</div>
-                            <div id="epAltEpUrl{{ episode.id }}">{{ episode.alt_episode_url }}</div>
-                            <div id="epVideoUrl{{ episode.id }}">{{ episode.video_url }}</div>
-                            <div id="epStatus{{ episode.id }}">{{ episode.status }}</div>
-                        </div> -->
                         <button class="btn btn-delete btn-delete-episode" data-episode_id="{{ episode.id }}" title="Delete episode">Delete</button>
                         <a class="btn btn-primary" href="edit-episode/{{ episode.id }}" title="Edit episode">Edit</a>
                         {% endif %}
@@ -83,22 +76,6 @@
                 </div>
             </div>
         </div>
-        <!-- Creating New Episodes -->
-        {% if user.is_authenticated and user == show.administrator %}
-        <!-- <div class="col-md-6 mb-4 mt-3" id="add-episode" name="add-episode">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title my-3 p-2">Add a new episode</h2>
-                    <hr>
-                    <form id="episodeForm" method="post" class="p-2">
-                        {{ episode_form | crispy }}
-                        {% csrf_token %}
-                        <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div> -->
-        {% endif %}
     </div>
 </div>
 <!-- Delete podcast confirmation modal -->
