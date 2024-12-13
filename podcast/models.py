@@ -7,6 +7,7 @@ from cloudinary.models import CloudinaryField
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+# import categories
 
 # # configure cloudinary to serve files over https to avoid mixed / insecure content warnings
 cloudinary.config(
