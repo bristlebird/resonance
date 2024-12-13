@@ -29,10 +29,14 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.environ.get("DEVELOPMENT")
-DEVELOPMENT = os.environ.get("DEVELOPMENT", False)
-DEBUG = DEVELOPMENT
+# DEVELOPMENT = os.environ.get('DEVELOPMENT', False)
+# DEBUG = DEVELOPMENT
+# DEBUG = os.environ['DEBUG_VALUE'] == 'True'
 # DEBUG = 'DEVELOPMENT' in os.environ
-DEBUG = True
+# DEBUG = True
+# DEBUG = False
+# sets debug to false unless DEBUG_VALUE env variable is found
+DEBUG = (bool(int(os.environ.get('DEBUG_VALUE', 0))))
 
 
 ALLOWED_HOSTS = ['8000-bristlebird-resonance-3ry7mcb5oez.ws.codeinstitute-ide.net', '.herokuapp.com',]
