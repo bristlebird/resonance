@@ -152,7 +152,15 @@ def podcast_feed(request, slug):
 
     # throw 403 if no results, i.e. no published episodes with audio available
     if not episodes:
-        raise PermissionDenied      
+        raise PermissionDenied
+
+    # if more than 1 season, season number should be displayed
+    for episode in episodes:
+        if episode.season_number > 1:
+            multiple_seasons = True
+            break
+        else:
+            multiple_seasons = False
 
     return render(
         request,
@@ -160,6 +168,7 @@ def podcast_feed(request, slug):
         {
             "show": show,
             "episodes": episodes,
+            "multiple_seasons": multiple_seasons,
         },
         content_type="text/xml",
     )

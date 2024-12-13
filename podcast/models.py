@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 # from django.core.validators import MaxValueValidator, MinValueValidator
 from cloudinary.models import CloudinaryField
+import uuid
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -57,6 +58,7 @@ class Podcast(models.Model):
     )
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
+    # guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     administrator = models.ForeignKey(
         User, on_delete=models.CASCADE, default="", related_name="podcast_shows"
     )
@@ -96,13 +98,14 @@ class Episode(models.Model):
     """
 
     EPISODE_TYPES = (
-        ("Normal", "Normal"),
-        ("Trailer", "Trailer"),
-        ("Bonus", "Bonus")
+        ("full", "Normal"),
+        ("trailer", "Trailer"),
+        ("bonus", "Bonus")
     )
 
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
+    # guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     podcast = models.ForeignKey(
         Podcast, on_delete=models.CASCADE, related_name="podcast_episodes"
     )
