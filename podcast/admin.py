@@ -1,6 +1,9 @@
+"""
+CLASSES TO DISPLAY MODELS IN DJANGO ADMIN
+"""
 from django.contrib import admin
-from .models import Podcast, Episode
 from django_summernote.admin import SummernoteModelAdmin
+from .models import Podcast, Episode
 
 
 @admin.register(Podcast)

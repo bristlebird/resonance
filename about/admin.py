@@ -1,3 +1,6 @@
+"""
+CLASSES TO DISPLAY MODELS IN DJANGO ADMIN
+"""
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 from .models import About

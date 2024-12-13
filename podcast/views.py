@@ -53,8 +53,8 @@ class PodcastList(generic.ListView):
 
     :template:`podcast/index.html`
     """
-    
-    # should only display published podcasts that have episodes with audio 
+
+    # should only display published podcasts that have episodes with audio
     queryset = Podcast.objects.filter(status=1).order_by("-created_on")
     template_name = "podcast/index.html"
     paginate_by = 6
@@ -84,7 +84,6 @@ def podcast_detail(request, slug):
     episodes = show.podcast_episodes.all().order_by("episode_number")
     episode_count = show.podcast_episodes.filter(status=1).count()
 
-
     # get collection of published episodes with audio for RSS feed
     feed_episodes = show.podcast_episodes.filter(
         status=1,
@@ -105,7 +104,6 @@ def podcast_detail(request, slug):
 
     # if audio_available == False and show.status == 0:
     #     raise PermissionDenied
-
 
     return render(
         request,
@@ -136,10 +134,9 @@ def podcast_feed(request, slug):
     :template:`podcast/podcast_feed.xml`
     """
 
-
     queryset = Podcast.objects.all()
     show = get_object_or_404(queryset, slug=slug)
-    # throw 403 if show in draft 
+    # throw 403 if show in draft
     # if show.status == 0 and show.administrator != request.user:
     if show.status == 0:
         raise PermissionDenied
@@ -307,7 +304,6 @@ def podcast_delete(request, slug, podcast_id):
     """
 
     queryset = Podcast.objects.all()
-    # show = get_object_or_404(queryset, slug=slug)
     show = get_object_or_404(queryset, pk=podcast_id)
     episodes = show.podcast_episodes.all()
 

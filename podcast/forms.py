@@ -1,11 +1,11 @@
+"""
+FORMS FOR ADDING / EDITING PODCASTS & EPISODES
+"""
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 from .models import Episode, Podcast
-# from cloudinary.models import CloudinaryField
-# from crispy_forms.helper import FormHelper
-# from crispy_forms.layout import Layout, Field, Submit, Row, Column
 
 
 class PodcastForm(ModelForm):
