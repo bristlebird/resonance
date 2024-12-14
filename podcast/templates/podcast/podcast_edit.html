@@ -27,7 +27,9 @@
                                 {% else %}
                                 <p class="mb-2">Artwork Image</p>
                                 {% endif %}
-                                {{ podcast_form.artwork }}
+                                <div class="file-input">
+                                    {{ podcast_form.artwork }}
+                                </div>
                                 <p class="small mt-2"><strong>Note:</strong> Maximum file upload size is 10MB.</p>
                             </div>
                         </div>

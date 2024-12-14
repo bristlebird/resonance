@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load static %}
-
+{% load cloudinary %}
 <div class="container">
     <div class="row">
         <h1 class="text-center my-5">My Podcasts</h1>
@@ -17,16 +17,15 @@
                         <div class="row g-0">                            
                             <div class="col-md-4">
                                 {% if "placeholder" in show.artwork.url %}
-                                <img class="img-fluid rounded-3" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+                                <img class="img-fluid rounded-3" src="{% static 'images/microphone.webp' %}" alt="placeholder image of microphone" width="320" height="320">
                                 {% else %}
-                                <img class="img-fluid rounded-3" src="{{ show.artwork.url }}" alt="{{ show.title }}">
+                                <img class="img-fluid rounded-3" src="{{ show.artwork.url }}" alt="{{ show.title }}" width="320" height="320">
                                 {% endif %}
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body ps-4 pt-0">
                                     <h2 class="card-title">{{ show.title }}</h2>
                                     <div class="card-text">{{ show.excerpt | safe }}</div>
-                                    <!-- <p class="card-text"><small class="text-muted">Created by {{ show.author }} on {{ show.created_on}}</small></p> -->
                                     <p class="card-ctoa">Go to show</p>
                                     {% if not show.status %}
                                     <p class="approval">This podcast is in draft</p>

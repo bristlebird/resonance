@@ -8,12 +8,14 @@ body {
     --tan-hide: #fb655d;
     --torch-red: #f7224c;
     --froly: #f77f97;
+    /* monza better contrast bg for danger / delete buttons */
+    --monza: #DD002C; 
     
 
     /* COLOUR CONTEXTS */
     --primary-color: var(--blue);
     --primary-dark: var(--mirage);
-    --secondary-color: var(--torch-red);
+    --secondary-color: var(--monza);
     --secondary-color-muted: var(--froly);
 
     --link-color: var(--melrose);
@@ -26,7 +28,7 @@ body {
     font-size: 1.125em;
     color: #fff;
 }
-
+a { color: var(--link-color);}
 a, a p, a h2 {
     transition: color .25s ease-in-out;
 }
@@ -211,3 +213,11 @@ audio {
  .modal {
     color: var(--text-dark);
  }
+/* edit form file input */
+.file-input, .file-input a, .file-input input, .file-input label  {
+    display: inline-block;
+}
+.file-input a, .file-input input {
+    padding-right: 2rem;
+    margin: .5rem .75rem;
+}

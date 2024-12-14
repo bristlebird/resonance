@@ -49,7 +49,9 @@
                                 {% else %}
                                 <p class="mb-2">Audio File</p>
                                 {% endif %}
-                                {{ episode_form.audiofile }}
+                                <div class="file-input">
+                                    {{ episode_form.audiofile }}
+                                </div>
                                 <p class="small mt-2"><strong>Note:</strong> Maximum file upload size is 10MB.</p>
                             </div>
                         </div>
