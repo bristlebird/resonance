@@ -16,9 +16,9 @@
         </div>
         <div class="col-md-5">
             {% if "placeholder" in show.artwork.url %}
-            <img class="scale rounded-xl" src="{% static 'images/default.jpg' %}" alt="placeholder image">
+            <img class="scale rounded-xl" src="{% static 'images/microphone.webp' %}" alt="placeholder image" width="320" height="320">
             {% else %}
-            <img class="scale rounded-xl" src="{{ show.artwork.url }}" alt="{{ show.title }}">
+            <img class="scale rounded-xl" src="{{ show.artwork.url }}" alt="{{ show.title }}" width="320" height="320">
             {% endif %}
         </div>
     </div>

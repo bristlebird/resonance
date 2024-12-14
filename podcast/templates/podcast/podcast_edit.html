@@ -22,7 +22,7 @@
                             <div class="col-md-12 mb-3">
                                 {% if "resonance/images" in show.artwork.url %}       
                                 <p class="mb-2">Current Artwork Image</p>
-                                <img class="mb-3" src="{{ show.artwork.url }}" id="pdImagefile{{ show.id }}" alt="poster image for {{ show.title }}">
+                                <img class="mb-3" src="{{ show.artwork.url }}" id="pdImagefile{{ show.id }}" alt="poster image for {{ show.title }}" width="320" height="320">
                                 <p class="mb-2">Replace Artwork Image</p>
                                 {% else %}
                                 <p class="mb-2">Artwork Image</p>
