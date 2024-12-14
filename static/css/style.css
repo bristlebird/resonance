@@ -10,6 +10,7 @@ body {
     --torch-red: #f7224c;
     --froly: #f77f97;
     --monza: #DD002C; 
+    --can-can: #de92a8;
     
     /* COLOUR CONTEXTS */
     --primary-color: var(--blue);
@@ -21,6 +22,7 @@ body {
     --link-hover-color: var(--fog);
     --text-hover-color: var(--secondary-color); 
     --text-dark: var(--ebony);
+    --text-warning-color: var(--can-can);
     --btn-color-primary: var(--primary-color);
     --btn-color-secondary: var(--secondary-color);
     /* FONT */
@@ -113,7 +115,7 @@ audio {
 }
 
 .approval {
-    color: rgb(222, 146, 168);
+    color: var(--text-warning-color);
 }
 
 /* About page */
