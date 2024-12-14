@@ -57,6 +57,11 @@
                                 {{ podcast_form.website|as_crispy_field }}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="offset-md-6 col-md-6 mb-0">
+                                {{ podcast_form.status|as_crispy_field }}
+                            </div>
+                        </div>
                         {% csrf_token %}
                         <button id="submitButton" type="submit" class="btn btn-primary btn-lg">Submit</button>
                     </form>
