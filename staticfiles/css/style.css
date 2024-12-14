@@ -1,4 +1,5 @@
 body {
+    /* COLOUR PALETTE */
     --ebony: #110C24;
     --ebony-clay: #2f2c41;
     --mirage: #1a1729;
@@ -8,10 +9,8 @@ body {
     --tan-hide: #fb655d;
     --torch-red: #f7224c;
     --froly: #f77f97;
-    /* monza better contrast bg for danger / delete buttons */
     --monza: #DD002C; 
     
-
     /* COLOUR CONTEXTS */
     --primary-color: var(--blue);
     --primary-dark: var(--mirage);
@@ -38,7 +37,6 @@ a:hover {
 .brand {
     font-size: 1.4rem;
     font-weight: 700;
-    /* color: #4A4A4F; */
 }
 
 .thin {
@@ -107,22 +105,9 @@ audio {
     width: 100%;
 }
 
-/* .post-link:hover, */
 .page-link {
     color: #E84610;
 }
-
-/* .post-title {
-    margin-top: 10%;
-    margin-left: 5%;
-}
-
-.post-subtitle {
-    margin-left: 5%;
-    color: lightgray;
-} */
-
-
 .faded {
     color: rgb(172, 175, 175);
 }
@@ -137,7 +122,6 @@ audio {
 }
 
 /* NAVIGATION */
-
 .navbar-dark .navbar-nav .nav-link {
     color: rgba(255, 255, 255, .875);
 }
@@ -196,13 +180,6 @@ audio {
     color: var(--text-dark);
 }
 
-/* .btn-like:hover,
-.btn-like:active {
-    color: #E84610;
-    background: transparent;
-    border: none;
-} */
-
 /* centre sign up forms */
 .vertical-center {
     display: flex;
@@ -213,7 +190,8 @@ audio {
  .modal {
     color: var(--text-dark);
  }
-/* edit form file input */
+
+ /* edit form file input */
 .file-input, .file-input a, .file-input input, .file-input label  {
     display: inline-block;
 }

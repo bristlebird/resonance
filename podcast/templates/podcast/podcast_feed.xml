@@ -61,6 +61,5 @@
             {% elif show.keywords %}<itunes:keywords>{{ show.keywords | safe }}</itunes:keywords>{% endif %}
         </item>
         {% endfor %}
-
     </channel>
 </rss>
