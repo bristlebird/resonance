@@ -101,7 +101,7 @@ The user stories for the app were added as issues to a Kanban board which was se
 
 ![](docs/images/rp-addep.webp) 
 
-- **Edit Episode :: Logged in** —  Form page that the Podcaster uses to edit an existing podcast epsiode. When the updated details are submitted, the user is redirected to the podcast detail page.
+- **Edit Episode :: Logged in** —  Form page that the Podcaster uses to edit an existing podcast epsiode. When the updated details are submitted, the user is redirected to the episode edit page.
 ``USER STORY: Edit podcast episodes — As a Site User / Pocast creator I can update an existing podcast episode so that I correct or change episode content.``
 
 ![](docs/images/rp-editep.webp) 
